@@ -1,0 +1,1861 @@
+/*
+ * GEO semantic theme tokens
+ *
+ * The component and page styles only consume these roles.  A palette changes
+ * values here; it does not need a second page-specific dark-mode stylesheet.
+ */
+
+:root {
+  /* Shared theme token contract. The default palette is Flagship Sapphire;
+ * warm-editorial, indigo and nordic override the same roles below. */
+  --bg-app: #f8fafc;
+  --bg-sidebar: #fff;
+  --bg-card: #fff;
+  --bg-subtle: #f1f5f9;
+  --bg-hover: #f8fafc;
+  --border-subtle: #f1f5f9;
+  --border-default: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --border-focus: #1d4ed8;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #fff;
+  --accent-primary: #1d4ed8;
+  --accent-hover: #1e40af;
+  --accent-light: #eff6ff;
+  --status-success-bg: #ecfdf5;
+  --status-success-text: #059669;
+  --status-tag-bg: #eef2f6;
+  --status-tag-text: #486581;
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-primary-light: #eff6ff;
+  --color-primary-border: #bfdbfe;
+  --btn-primary-bg: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  --btn-primary-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 5%), 0 4px 12px 0 rgb(29 78 216 / 25%);
+  --status-error-bg: #fff1f2;
+  --status-error-text: #e11d48;
+  --status-info-bg: #f0f9ff;
+  --status-info-text: #0284c7;
+  --shadow-card:
+    0 1px 3px 0 rgb(15 23 42 / 3%), 0 1px 2px -1px rgb(15 23 42 / 3%);
+  --shadow-card-hover: 0 4px 12px -2px rgb(15 23 42 / 6%);
+  --shadow-btn: var(--btn-primary-shadow);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --geo-saas-display-font-family:
+    'Inter', 'Manrope', ui-sans-serif, system-ui, -apple-system,
+    blinkmacsystemfont, 'Segoe UI', sans-serif;
+  --geo-saas-radius-sm: 6px;
+  --geo-saas-radius-md: 8px;
+  --geo-saas-radius-lg: 12px;
+  --geo-saas-radius-xs: 4px;
+  --geo-saas-radius-xl: 12px;
+  --geo-saas-radius-2xl: 12px;
+  --geo-saas-bg: var(--bg-app);
+  --geo-saas-surface: var(--bg-card);
+  --geo-saas-surface-muted: var(--bg-subtle);
+  --geo-saas-surface-hover: var(--bg-hover);
+  --geo-saas-surface-strong: var(--text-primary);
+  --geo-saas-card-secondary: var(--bg-subtle);
+  --geo-saas-card-hover: var(--bg-card);
+  --geo-saas-input-background: var(--bg-card);
+  --geo-saas-ink: var(--text-primary);
+  --geo-saas-secondary: var(--text-secondary);
+  --geo-saas-body: var(--text-secondary);
+  --geo-saas-muted: var(--text-secondary);
+  --geo-saas-placeholder: var(--text-tertiary);
+  --geo-saas-disabled: var(--text-tertiary);
+  --geo-saas-border: var(--border-default);
+  --geo-saas-border-hover: var(--border-hover);
+  --geo-saas-border-strong: var(--border-default);
+  --geo-saas-border-soft: var(--border-subtle);
+  --geo-saas-brand: var(--accent-primary);
+  --geo-saas-brand-hover: var(--accent-hover);
+  --geo-saas-brand-active: var(--accent-hover);
+  --geo-saas-brand-soft: var(--color-primary-light);
+  --geo-saas-brand-soft-hover: var(--color-primary-light);
+  --geo-saas-brand-border: var(--color-primary-border);
+  --geo-saas-brand-foreground: var(--text-inverse);
+  --geo-saas-on-strong: var(--text-inverse);
+  --geo-saas-tag: var(--status-tag-text);
+  --geo-saas-tag-soft: var(--status-tag-bg);
+  --geo-saas-tag-border: var(--border-default);
+  --geo-saas-success: var(--status-success-text);
+  --geo-saas-success-soft: var(--status-success-bg);
+  --geo-saas-success-border: #a7f3d0;
+  --geo-saas-warning: #9a6700;
+  --geo-saas-warning-soft: #fffaf0;
+  --geo-saas-warning-border: #ead9b4;
+  --geo-saas-danger: var(--status-error-text);
+  --geo-saas-danger-soft: var(--status-error-bg);
+  --geo-saas-danger-border: #fecdd3;
+  --geo-saas-info: var(--status-info-text);
+  --geo-saas-info-soft: var(--status-info-bg);
+  --geo-saas-info-border: #e2e8f0;
+  --geo-saas-focus: var(--border-focus);
+  --geo-saas-focus-ring: rgb(29 78 216 / 24%);
+  --geo-saas-sidebar-bg: var(--bg-sidebar);
+  --geo-saas-topbar-bg: var(--bg-card);
+  --geo-saas-nav-shadow: none;
+  --geo-saas-shadow-sm: var(--shadow-card);
+  --geo-saas-shadow-card: var(--shadow-card);
+  --geo-saas-shadow-card-hover: var(--shadow-card-hover);
+  --geo-chart-1: var(--geo-saas-brand);
+  --geo-chart-2: var(--geo-saas-success);
+  --geo-chart-3: var(--geo-saas-warning);
+  --geo-chart-4: var(--geo-saas-danger);
+  --geo-chart-5: var(--geo-saas-info);
+
+  /* Generic semantic names used by Antdv/Tailwind primitives. */
+  --background: 210 40% 98%;
+  --background-deep: 210 40% 96%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --primary: 221 76% 48%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
+  --accent: 214 100% 97%;
+  --accent-foreground: 221 76% 48%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --input-background: 0 0% 100%;
+  --ring: 221 76% 48%;
+}
+
+/* -------------------------------------------------------------------------
+ * Default dark contract
+ *
+ * Light palette contracts are defined once in the named palette layer below.
+ * Dark mode remains an explicit contract because it is currently available
+ * only for the default palette.
+ * ------------------------------------------------------------------------- */
+
+:root[data-geo-theme='default'].geo-dark {
+  --geo-saas-font-family:
+    'Geist', 'Inter', ui-sans-serif, system-ui, -apple-system,
+    blinkmacsystemfont, 'Segoe UI', sans-serif;
+  --geo-saas-bg: #0d0f13;
+  --geo-saas-surface: #13161b;
+  --geo-saas-surface-muted: #171a20;
+  --geo-saas-surface-hover: #1b1f26;
+  --geo-saas-surface-strong: #1b1f26;
+  --geo-saas-card-secondary: #171a20;
+  --geo-saas-card-hover: #1b1f26;
+  --geo-saas-input-background: #13161b;
+  /* 深色底上的近白（#f5f7fa，L*97.2）对卡片底色 #13161b 对比度约 16.9:1，长时间阅读晃眼；
+   * 降到 #e2e7ed（L*91.4，约 14.6:1）。on-strong / preview-bg 是彩色底与浅色面板，保持原值。 */
+  --geo-saas-ink: #e2e7ed;
+  --geo-saas-secondary: #a9b0bb;
+  --geo-saas-body: #d6dae1;
+  --geo-saas-muted: #858d99;
+  --geo-saas-placeholder: #858d99;
+  --geo-saas-disabled: #626a75;
+  --geo-saas-border: #252a32;
+  --geo-saas-border-hover: #3b4350;
+  --geo-saas-border-strong: #303641;
+  --geo-saas-border-soft: #1e232b;
+  --geo-saas-brand: #7778ff;
+  --geo-saas-brand-hover: #8687ff;
+  --geo-saas-brand-active: #6869ed;
+  --geo-saas-brand-soft: #1a1b2d;
+  --geo-saas-brand-soft-hover: #22243b;
+  --geo-saas-brand-border: #30325d;
+  --geo-saas-brand-foreground: #fff;
+  --btn-primary-bg: #7778ff;
+  --btn-primary-shadow: 0 2px 8px rgb(119 120 255 / 28%);
+  --geo-saas-on-strong: #f5f7fa;
+  --geo-saas-sidebar-bg: #111419;
+  --geo-saas-topbar-bg: #13161b;
+  --geo-saas-preview-bg: #f5f7fa;
+  --geo-saas-preview-surface: #e9ebef;
+  --geo-saas-preview-surface-strong: #e7e9ee;
+  --geo-saas-preview-border: #d8dbe2;
+  --geo-saas-preview-text: #151820;
+  --geo-saas-preview-muted: #59616d;
+  --geo-saas-focus: #7778ff;
+  --geo-saas-focus-ring: rgb(119 120 255 / 32%);
+  --geo-saas-nav-shadow: none;
+  --geo-saas-shadow-sm: 0 1px 2px rgb(0 0 0 / 18%);
+  --geo-saas-shadow-card: 0 12px 30px rgb(0 0 0 / 20%);
+  --geo-saas-shadow-card-hover: 0 12px 30px rgb(0 0 0 / 26%);
+  --geo-saas-shadow-preview: 0 16px 36px rgb(0 0 0 / 14%);
+  --geo-saas-success: #78c69a;
+  --geo-saas-success-soft: #173326;
+  --geo-saas-success-border: #285b43;
+  --geo-saas-warning: #d7b369;
+  --geo-saas-warning-soft: #3a301d;
+  --geo-saas-warning-border: #72511e;
+  --geo-saas-danger: #de8998;
+  --geo-saas-danger-soft: #3b222b;
+  --geo-saas-danger-border: #71313d;
+  --geo-saas-info: #86a9d9;
+  --geo-saas-info-soft: #1e2f47;
+  --geo-saas-info-border: #314c78;
+
+  /* Dark-mode overlays for the semantic role contract (v1.1 C-02/C-08):
+     components consume these roles and must render correctly in dark mode
+     without any component-level overrides. Values follow the existing
+     --geo-saas-danger/warning/info dark palette above. */
+  --status-success-text: #78c69a;
+  --status-success-bg: #173326;
+  --status-success-border: #285b43;
+  --status-error-text: #de8998;
+  --status-error-bg: #3b222b;
+  --status-error-border: #71313d;
+  --status-info-text: #86a9d9;
+  --status-info-bg: #1e2f47;
+  --status-info-border: #314c78;
+  --status-tag-text: #a9b0bb;
+  --status-tag-bg: #171a20;
+  --bg-app: #0d0f13;
+  --bg-sidebar: #111419;
+  --bg-card: #13161b;
+  --bg-subtle: #171a20;
+  --bg-hover: #1b1f26;
+  --border-subtle: #1e232b;
+  --border-default: #252a32;
+  --border-hover: #3b4350;
+  --border-focus: #7778ff;
+  --accent-primary: #7778ff;
+  --accent-hover: #8687ff;
+  --accent-light: #1a1b2d;
+  --text-inverse: #0f172a;
+  --geo-chart-1: #7778ff;
+  --geo-chart-2: #8f90ff;
+  --geo-chart-3: #6667ef;
+  --geo-chart-4: #78c69a;
+  --geo-chart-5: #d7b369;
+  --background: 225 20% 5%;
+  --background-deep: 222 19% 7%;
+  --foreground: 216 20% 97%;
+  --card: 216 18% 9%;
+  --card-foreground: 216 20% 97%;
+  --popover: 216 18% 9%;
+  --popover-foreground: 216 20% 97%;
+  --muted: 218 17% 13%;
+  --muted-foreground: 216 11% 57%;
+  --primary: 239 100% 73%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 218 17% 13%;
+  --secondary-foreground: 216 20% 97%;
+  --accent: 237 28% 14%;
+  --accent-foreground: 238 100% 86%;
+  --border: 218 15% 17%;
+  --input: 218 15% 17%;
+  --input-background: 216 18% 9%;
+  --ring: 239 100% 73%;
+  --surface-1: #13161b;
+  --surface-2: #171a20;
+  --surface-3: #1b1f26;
+  --text-primary: #e2e7ed;
+  --text-secondary: #a9b0bb;
+  --text-muted: #858d99;
+  --text-tertiary: #858d99;
+  --chart-1: 239 100% 73%;
+  --chart-2: 239 100% 78%;
+  --chart-3: 239 82% 67%;
+  --chart-4: 145 42% 62%;
+  --chart-5: 41 57% 63%;
+}
+
+html[data-geo-theme].geo-app .geo-shell,
+html[data-geo-theme].geo-login-app .geo-login-page,
+html[data-geo-theme] .geo-marketing-page {
+  font-family: var(--geo-saas-font-family);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+html[data-geo-theme].geo-app .geo-shell :is(.ant-btn, .ant-input, .ant-select),
+html[data-geo-theme].geo-app .geo-shell :is(input, select, textarea) {
+  font-family: inherit;
+}
+
+html[data-geo-theme].geo-app .geo-shell .ant-btn {
+  border-radius: var(--geo-saas-radius-md);
+}
+
+html[data-geo-theme].geo-app .geo-shell :is(.ant-card, .geo-workspace) {
+  border-radius: var(--geo-saas-radius-lg);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(.geo-preview, .geo-product-preview) {
+  border-radius: var(--geo-saas-radius-xl);
+  box-shadow: var(--geo-saas-shadow-preview);
+}
+
+html[data-geo-theme].geo-app .geo-shell :is(.ant-tag, .geo-pill) {
+  border-radius: 999px;
+}
+
+html[data-geo-theme='default'].geo-app .geo-shell .geo-nav-item.active,
+html[data-geo-theme='nordic'].geo-app .geo-shell .geo-nav-item.active {
+  box-shadow: none;
+}
+
+html[data-geo-theme='structured-soft'].geo-app .geo-shell .geo-nav-item.active {
+  border-radius: var(--geo-saas-radius-md);
+}
+
+html[data-geo-theme='warm-editorial'].geo-app .geo-shell {
+  letter-spacing: -0.005em;
+}
+
+html[data-geo-theme='warm-editorial'].geo-app
+  .geo-shell
+  :is(.geo-page-header h1, .project-page__header h1, .fact-page__header h1) {
+  letter-spacing: -0.04em;
+}
+
+/* Keep standard cards quiet; reserve elevation for hierarchy anchors. */
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(.ant-card, .project-card, .geo-todo-row, .geo-project-row) {
+  box-shadow: none;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .geo-kpi,
+    .geo-governance,
+    .geo-workflow-panel,
+    .geo-budget-summary,
+    .risk-card,
+    .agent-run-card,
+    .report-artifact
+  ) {
+  box-shadow: var(--geo-saas-shadow-card);
+}
+
+/* -------------------------------------------------------------------------
+ * Named palette contracts
+ *
+ * The product keeps `data-geo-theme` separate from the host application's
+ * `data-theme`. These are the stable mappings used by the theme picker:
+ * default = sapphire, structured-soft = indigo, nordic = pine.
+ * ------------------------------------------------------------------------- */
+
+:root[data-geo-theme='default']:not(.geo-dark) {
+  --bg-app: #f8fafc;
+  --bg-sidebar: #fff;
+  --bg-card: #fff;
+  --bg-subtle: #f1f5f9;
+  --bg-hover: #f8fafc;
+  --border-subtle: #f1f5f9;
+  --border-default: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --border-focus: #1d4ed8;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #fff;
+  --accent-primary: #1d4ed8;
+  --accent-hover: #1e40af;
+  --accent-light: #eff6ff;
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-primary-light: #eff6ff;
+  --color-primary-border: #bfdbfe;
+  --btn-primary-bg: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  --btn-primary-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 5%), 0 4px 12px 0 rgb(29 78 216 / 25%);
+  --status-success-bg: #ecfdf5;
+  --status-success-text: #059669;
+  --status-success-border: #a7f3d0;
+  --status-error-bg: #fff1f2;
+  --status-error-text: #e11d48;
+  --status-error-border: #fecdd3;
+  --status-info-bg: #f0f9ff;
+  --status-info-text: #0284c7;
+  --status-info-border: #bae6fd;
+  --status-tag-bg: #eef2f6;
+  --status-tag-text: #486581;
+  --shadow-card:
+    0 1px 3px 0 rgb(15 23 42 / 3%), 0 1px 2px -1px rgb(15 23 42 / 3%);
+  --shadow-card-hover: 0 4px 12px -2px rgb(15 23 42 / 6%);
+  --shadow-btn: var(--btn-primary-shadow);
+  --focus-ring: rgb(29 78 216 / 24%);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --background: 210 40% 98%;
+  --background-deep: 210 40% 96%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --primary: 221 76% 48%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
+  --accent: 214 100% 97%;
+  --accent-foreground: 221 76% 48%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --input-background: 0 0% 100%;
+  --ring: 221 76% 48%;
+  --surface-1: #fff;
+  --surface-2: #f1f5f9;
+  --surface-3: #f8fafc;
+  --text-muted: #94a3b8;
+}
+
+:root[data-geo-theme='structured-soft'] {
+  --bg-app: #f8f8fc;
+  --bg-sidebar: #fff;
+  --bg-card: #fff;
+  --bg-subtle: #f0f0f8;
+  --bg-hover: #f4f4fc;
+  --border-subtle: #f0f0f7;
+  --border-default: #e4e4f0;
+  --border-hover: #cfd2e2;
+  --border-focus: #5e6ad2;
+  --text-primary: #18182e;
+  --text-secondary: #585876;
+  --text-tertiary: #9b9bb8;
+  --text-inverse: #fff;
+  --accent-primary: #5e6ad2;
+  --accent-hover: #4b55bd;
+  --accent-light: #f0f2fe;
+  --color-primary: #5e6ad2;
+  --color-primary-hover: #4b55bd;
+  --color-primary-light: #f0f2fe;
+  --color-primary-border: #c8ccf5;
+  --btn-primary-bg: var(--color-primary);
+  --btn-primary-shadow: var(--shadow-card);
+  --status-success-bg: #ecfdf5;
+  --status-success-text: #059669;
+  --status-success-border: #a7f3d0;
+  --status-error-bg: #fff1f2;
+  --status-error-text: #e11d48;
+  --status-error-border: #fecdd3;
+  --status-info-bg: #f0f4ff;
+  --status-info-text: #5e6ad2;
+  --status-info-border: #c8ccf5;
+  --status-tag-bg: #f0f4ff;
+  --status-tag-text: #5e6ad2;
+  --shadow-card: 0 1px 3px rgb(24 24 46 / 4%), 0 1px 2px rgb(24 24 46 / 2%);
+  --shadow-card-hover: 0 4px 12px -2px rgb(24 24 46 / 6%);
+  --shadow-btn: 0 2px 8px rgb(94 106 210 / 28%);
+  --focus-ring: rgb(94 106 210 / 24%);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --background: 240 33% 98%;
+  --background-deep: 240 29% 96%;
+  --foreground: 240 32% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 32% 14%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 32% 14%;
+  --muted: 240 29% 96%;
+  --muted-foreground: 240 15% 40%;
+  --primary: 234 58% 59%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 240 29% 96%;
+  --secondary-foreground: 240 32% 14%;
+  --accent: 232 79% 97%;
+  --accent-foreground: 234 58% 59%;
+  --border: 240 29% 92%;
+  --input: 240 29% 92%;
+  --input-background: 0 0% 100%;
+  --ring: 234 58% 59%;
+  --surface-1: #fff;
+  --surface-2: #f0f0f8;
+  --surface-3: #f4f4fc;
+  --text-muted: #9b9bb8;
+}
+
+:root[data-geo-theme='nordic'] {
+  --bg-app: #f7faf8;
+  --bg-sidebar: #fff;
+  --bg-card: #fff;
+  --bg-subtle: #eff5f2;
+  --bg-hover: #f2f7f4;
+  --border-subtle: #edf3f0;
+  --border-default: #e0ebe4;
+  --border-hover: #c5d8cd;
+  --border-focus: #2d6a4f;
+  --text-primary: #192e24;
+  --text-secondary: #4a6357;
+  --text-tertiary: #89a396;
+  --text-inverse: #fff;
+  --accent-primary: #2d6a4f;
+  --accent-hover: #21513c;
+  --accent-light: #f1f8f4;
+  --color-primary: #2d6a4f;
+  --color-primary-hover: #21513c;
+  --color-primary-light: #f1f8f4;
+  --color-primary-border: #d8eedf;
+  --btn-primary-bg: linear-gradient(180deg, #387a5b 0%, #2d6a4f 100%);
+  --btn-primary-shadow: 0 2px 8px rgb(45 106 79 / 26%);
+  --status-success-bg: #ecfdf5;
+  --status-success-text: #059669;
+  --status-success-border: #a7f3d0;
+  --status-error-bg: #fff1f2;
+  --status-error-text: #e11d48;
+  --status-error-border: #fecdd3;
+  --status-info-bg: #f1f8f4;
+  --status-info-text: #2d6a4f;
+  --status-info-border: #d8eedf;
+  --status-tag-bg: #eff5f2;
+  --status-tag-text: #4a6357;
+  --shadow-card: 0 1px 3px rgb(25 46 36 / 4%), 0 1px 2px rgb(25 46 36 / 2%);
+  --shadow-card-hover: 0 4px 12px -2px rgb(25 46 36 / 6%);
+  --shadow-btn: var(--btn-primary-shadow);
+  --focus-ring: rgb(45 106 79 / 24%);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --background: 150 21% 97%;
+  --background-deep: 145 23% 94%;
+  --foreground: 145 29% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 145 29% 14%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 145 29% 14%;
+  --muted: 150 21% 94%;
+  --muted-foreground: 145 15% 46%;
+  --primary: 153 40% 30%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 150 21% 94%;
+  --secondary-foreground: 145 29% 14%;
+  --accent: 147 48% 96%;
+  --accent-foreground: 153 40% 30%;
+  --border: 146 24% 90%;
+  --input: 146 24% 90%;
+  --input-background: 0 0% 100%;
+  --ring: 153 40% 30%;
+  --surface-1: #fff;
+  --surface-2: #eff5f2;
+  --surface-3: #f7faf8;
+  --text-muted: #89a396;
+}
+
+:root[data-geo-theme='warm-editorial'] {
+  --bg-app: #faf8f5;
+  --bg-sidebar: #f4efeb;
+  --bg-card: #fff;
+  --bg-subtle: #f5f1eb;
+  --bg-hover: #fffaf7;
+  --border-subtle: #ece6de;
+  --border-default: #e2dbd2;
+  --border-hover: #d3c8bd;
+  --border-focus: #c15f3d;
+  --text-primary: #2b2825;
+  --text-secondary: #706b65;
+  --text-tertiary: #a0988f;
+  --text-inverse: #fff;
+  --accent-primary: #c15f3d;
+  --accent-hover: #ae5131;
+  --accent-light: #fbf0eb;
+  --geo-saas-display-font-family:
+    'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'Iowan Old Style',
+    'Palatino Linotype', 'Book Antiqua', georgia, serif;
+  --color-primary: #c15f3d;
+  --color-primary-hover: #ae5131;
+  --color-primary-light: #fbf0eb;
+  --color-primary-border: #c15f3d;
+  --btn-primary-bg: var(--color-primary);
+  --btn-primary-shadow: var(--shadow-card);
+  --status-success-bg: #edf5ee;
+  --status-success-text: #3b724c;
+  --status-success-border: #c8dfcb;
+  --status-error-bg: #f9edea;
+  --status-error-text: #9c4f3c;
+  --status-error-border: #e5c7be;
+  --status-info-bg: #f5f1eb;
+  --status-info-text: #706b65;
+  --status-info-border: #e2dbd2;
+  --status-tag-bg: #f5f1eb;
+  --status-tag-text: #706b65;
+  --shadow-card: 0 1px 2px rgb(43 40 37 / 4%);
+  --shadow-card-hover: 0 4px 12px -2px rgb(43 40 37 / 6%);
+  --shadow-btn: 0 1px 2px rgb(43 40 37 / 8%);
+  --focus-ring: rgb(193 95 61 / 22%);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --background: 36 33% 97%;
+  --background-deep: 36 33% 94%;
+  --foreground: 24 8% 16%;
+  --card: 0 0% 100%;
+  --card-foreground: 24 8% 16%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 24 8% 16%;
+  --muted: 36 33% 94%;
+  --muted-foreground: 25 6% 43%;
+  --primary: 15 52% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 36 33% 94%;
+  --secondary-foreground: 24 8% 16%;
+  --accent: 19 67% 95%;
+  --accent-foreground: 15 52% 50%;
+  --border: 34 22% 86%;
+  --input: 34 22% 86%;
+  --input-background: 0 0% 100%;
+  --ring: 15 52% 50%;
+  --surface-1: #fff;
+  --surface-2: #f5f1eb;
+  --surface-3: #f4efeb;
+  --text-muted: #a0988f;
+}
+
+/* Bridge the product tokens to the existing shared GEO semantic roles. */
+:root[data-geo-theme='default']:not(.geo-dark),
+:root[data-geo-theme='structured-soft'],
+:root[data-geo-theme='nordic'],
+:root[data-geo-theme='warm-editorial'] {
+  --geo-saas-font-family:
+    'Inter', 'Manrope', ui-sans-serif, system-ui, -apple-system,
+    blinkmacsystemfont, 'Segoe UI', sans-serif;
+  --geo-saas-radius-xs: 4px;
+  --geo-saas-radius-sm: var(--radius-sm);
+  --geo-saas-radius-md: var(--radius-md);
+  --geo-saas-radius-lg: var(--radius-lg);
+  --geo-saas-radius-xl: var(--radius-lg);
+  --geo-saas-radius-2xl: var(--radius-lg);
+  --geo-saas-bg: var(--bg-app);
+  --geo-saas-surface: var(--bg-card);
+  --geo-saas-surface-muted: var(--bg-subtle);
+  --geo-saas-surface-hover: var(--bg-hover);
+  --geo-saas-surface-strong: var(--text-primary);
+  --geo-saas-card-secondary: var(--bg-subtle);
+  --geo-saas-card-hover: var(--bg-card);
+  --geo-saas-input-background: var(--bg-card);
+  --geo-saas-ink: var(--text-primary);
+  --geo-saas-secondary: var(--text-secondary);
+  --geo-saas-body: var(--text-secondary);
+  --geo-saas-muted: var(--text-secondary);
+  --geo-saas-placeholder: var(--text-tertiary);
+  --geo-saas-disabled: var(--text-tertiary);
+  --geo-saas-border: var(--border-default);
+  --geo-saas-border-strong: var(--border-default);
+  --geo-saas-border-soft: var(--border-subtle);
+  --geo-saas-brand: var(--color-primary);
+  --geo-saas-brand-hover: var(--color-primary-hover);
+  --geo-saas-brand-active: var(--color-primary-hover);
+  --geo-saas-brand-soft: var(--color-primary-light);
+  --geo-saas-brand-soft-hover: var(--color-primary-light);
+  --geo-saas-brand-border: var(--color-primary-border);
+  --geo-saas-brand-foreground: var(--text-inverse);
+  --geo-saas-on-strong: var(--text-inverse);
+  --geo-saas-success: var(--status-success-text);
+  --geo-saas-success-soft: var(--status-success-bg);
+  --geo-saas-success-border: var(--status-success-border);
+  --geo-saas-warning: #9a6700;
+  --geo-saas-warning-soft: #fffaf0;
+  --geo-saas-warning-border: #ead9b4;
+  --geo-saas-danger: var(--status-error-text);
+  --geo-saas-danger-soft: var(--status-error-bg);
+  --geo-saas-danger-border: var(--status-error-border);
+  --geo-saas-info: var(--status-info-text);
+  --geo-saas-info-soft: var(--status-info-bg);
+  --geo-saas-info-border: var(--status-info-border);
+  --geo-saas-focus: var(--border-focus);
+  --geo-saas-focus-ring: var(--focus-ring);
+  --geo-saas-sidebar-bg: var(--bg-sidebar);
+  --geo-saas-topbar-bg: var(--bg-card);
+  --geo-saas-preview-bg: var(--bg-subtle);
+  --geo-saas-preview-surface: var(--bg-card);
+  --geo-saas-preview-surface-strong: var(--bg-subtle);
+  --geo-saas-preview-border: var(--border-default);
+  --geo-saas-preview-text: var(--text-primary);
+  --geo-saas-preview-muted: var(--text-secondary);
+  --geo-saas-nav-shadow: none;
+  --geo-saas-shadow-sm: var(--shadow-card);
+  --geo-saas-shadow-card: var(--shadow-card);
+  --geo-saas-shadow-card-hover: var(--shadow-card-hover);
+  --geo-saas-border-hover: var(--border-hover);
+  --geo-saas-shadow-preview: var(--shadow-card);
+  --geo-chart-1: var(--color-primary);
+  --geo-chart-2: var(--color-primary-hover);
+  --geo-chart-3: var(--text-primary);
+  --geo-chart-4: var(--status-success-text);
+  --geo-chart-5: var(--status-info-text);
+}
+
+/* NOTE: --card-foreground / --popover-foreground / --secondary-foreground /
+ * --accent-foreground / --muted-foreground / --primary-foreground /
+ * --input-background are Vben channel tokens consumed as `hsl(var(--token))`.
+ * They must stay bare "H S% L%" triplets and are already defined per palette
+ * above; assigning a hex value here made every `hsl()` that reads them invalid
+ * at computed-value time, which silently dropped text-primary-foreground,
+ * text-muted-foreground and friends across the whole app. */
+
+/* High-specificity boundary: it wins over old SFC color declarations without
+ * needing !important.  New page styles should use the same roles directly. */
+html[data-geo-theme].geo-app body,
+html[data-geo-theme].geo-app #app,
+html[data-geo-theme].geo-app .geo-shell,
+html[data-geo-theme].geo-app .geo-shell .geo-main,
+html[data-geo-theme].geo-app .geo-shell .geo-content {
+  color: var(--geo-saas-body);
+  background-color: var(--geo-saas-bg);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-sidebar,
+html[data-geo-theme].geo-app .geo-shell .geo-brand {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-sidebar-bg);
+  border-color: var(--geo-saas-border);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-topbar {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-topbar-bg);
+  border-color: var(--geo-saas-border);
+  box-shadow: var(--geo-saas-shadow-sm);
+  backdrop-filter: none;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .geo-brand-title,
+    .geo-breadcrumb strong,
+    .geo-user-name,
+    .geo-user-dropdown-heading strong
+  ) {
+  color: var(--geo-saas-ink);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .geo-brand-subtitle,
+    .geo-nav-icon,
+    .geo-breadcrumb,
+    .geo-user-dropdown-heading small
+  ) {
+  color: var(--geo-saas-muted);
+}
+
+/* M-03：侧栏组标题要比辅助灰再浅一档（#9ca3af ⇒ --text-tertiary）。
+ * 从上面的共享组里拆出来单独声明——若直接改共享组，会连带把面包屑与
+ * 品牌副标题一起压浅，超出菜单样式对齐的范围。 */
+html[data-geo-theme].geo-app .geo-shell .geo-nav-group-label {
+  color: var(--text-tertiary);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-nav-item {
+  color: var(--geo-saas-body);
+  background: transparent;
+  border-color: transparent;
+}
+
+/* M-04：悬停与选中必须分开声明。
+ * 原先是 `:is(.geo-nav-item:hover, .geo-nav-item.active)` 共用一组值，
+ * 于是「悬停」和「选中」渲染成同一副样子，M-04 要求的「浅底 + 主色文字 + 3px
+ * 指示条」双编码在视觉上不成立。此处拆开：悬停=中性浅底，选中=主色浅底+主色文字。 */
+html[data-geo-theme].geo-app .geo-shell .geo-nav-item:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-nav-item.active {
+  color: var(--accent-primary);
+  background: var(--accent-light);
+  border-radius: var(--geo-saas-radius-md);
+  box-shadow: var(--geo-saas-nav-shadow);
+}
+
+html[data-geo-theme='nordic'].geo-app .geo-shell .geo-nav-item.active {
+  color: var(--geo-saas-brand);
+  background: var(--geo-saas-brand-soft);
+  border: 1px solid var(--geo-saas-brand-border);
+}
+
+html[data-geo-theme='nordic'].geo-app
+  .geo-shell
+  .geo-workflow-panel__step.is-active {
+  color: var(--geo-saas-brand-foreground);
+  background: var(--geo-saas-brand);
+}
+
+html[data-geo-theme='nordic'].geo-app
+  .geo-shell
+  .geo-workflow-panel__step.is-active
+  .geo-workflow-panel__index {
+  color: var(--geo-saas-brand);
+  background: var(--geo-saas-brand-foreground);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-nav-item.active .geo-nav-icon {
+  color: var(--geo-saas-brand);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-nav-item.active::before {
+  background: var(--geo-saas-brand);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(.geo-governance, .geo-user-dropdown, .geo-profile-editor) {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .geo-page-header h1,
+    .project-page__header h1,
+    .project-page__header p,
+    .project-page__header .project-page__eyebrow,
+    .fact-page__header h1,
+    .fact-page__header p,
+    .fact-page__header .fact-page__eyebrow,
+    .question-page__header h1,
+    .question-page__header p,
+    .question-page__header .question-page__eyebrow,
+    .content-page__header h1,
+    .content-page__header p,
+    .content-page__header .content-page__eyebrow,
+    .monitor-page__header h1,
+    .monitor-page__header p,
+    .monitor-page__header .monitor-page__eyebrow,
+    .report-page__header h1,
+    .report-page__header p,
+    .report-page__header .report-page__eyebrow,
+    .settings-page__header h1,
+    .settings-page__header p,
+    .settings-page__header .settings-page__eyebrow,
+    .audit-page__header h1,
+    .audit-page__header p,
+    .audit-page__header .audit-page__eyebrow,
+    .score-page__header h1,
+    .score-page__header p,
+    .score-page__header .score-page__eyebrow,
+    .project-detail__hero h1,
+    .project-detail__hero p,
+    .project-detail__hero .project-detail__eyebrow
+  ) {
+  color: var(--geo-saas-on-strong);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .geo-page-header .geo-btn-ghost,
+    .geo-page-header .ant-btn-default,
+    .geo-page-header .ant-btn-text,
+    .geo-page-header .ant-btn-link,
+    .project-page__header .ant-btn-default,
+    .fact-page__header .ant-btn-default,
+    .question-page__header .ant-btn-default,
+    .content-page__header .ant-btn-default,
+    .monitor-page__header .ant-btn-default,
+    .report-page__header .ant-btn-default,
+    .settings-page__header .ant-btn-default,
+    .audit-page__header .ant-btn-default,
+    .score-page__header .ant-btn-default,
+    .project-detail__hero .ant-btn-default
+  ) {
+  color: var(--geo-saas-ink);
+  background: var(--geo-saas-brand-soft);
+  border-color: var(--geo-saas-brand-border);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .geo-kpi,
+    .geo-todo-row,
+    .geo-project-row,
+    .geo-boundary-card,
+    .geo-empty-card,
+    .project-card,
+    .fact-page__workspace,
+    .question-page__workspace,
+    .content-page__workspace,
+    .monitor-page__workspace,
+    .report-page__workspace,
+    .settings-page__workspace,
+    .audit-page__workspace,
+    .score-page__workspace,
+    .settings-page__accounts,
+    .settings-page__scope,
+    .project-page__toolbar,
+    .fact-page__workspace-heading,
+    .question-page__toolbar,
+    .content-page__toolbar,
+    .monitor-page__toolbar,
+    .audit-page__toolbar,
+    .settings-page__tab-head,
+    .project-invitations,
+    .project-invitation,
+    .geo-budget-section,
+    .geo-budget-summary,
+    .geo-budget-card,
+    .geo-budget-empty,
+    .risk-card,
+    .reference-panel,
+    .agent-run-card,
+    .report-artifact,
+    .article-detail,
+    .article-detail__section,
+    .geo-workflow-panel,
+    .geo-project-context-picker
+  ) {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border);
+  box-shadow: none;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    [class*='__title'],
+    [class*='__value'],
+    [class*='__name'],
+    [class*='__headline'],
+    .cell-primary,
+    .cell-content,
+    .geo-kpi-value,
+    .geo-todo-count,
+    .project-card__title,
+    .copy-value
+  ) {
+  color: var(--geo-saas-ink);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    [class*='__label'],
+    [class*='__hint'],
+    [class*='__description'],
+    [class*='__detail'],
+    [class*='__meta'],
+    [class*='__note'],
+    [class*='__secondary'],
+    .cell-secondary,
+    .geo-kpi-foot,
+    .geo-section-title > span,
+    .geo-todo-label,
+    .geo-project-bottleneck,
+    .geo-empty-card p,
+    .form-hint,
+    .form-item-hint,
+    .source-evidence-hint
+  ) {
+  color: var(--geo-saas-muted);
+}
+
+html[data-geo-theme].geo-app .geo-shell main > :is(h1, h2, h3, h4) {
+  color: var(--geo-saas-ink);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .project-page__toolbar,
+    .fact-page__workspace-heading,
+    .question-page__toolbar,
+    .content-page__toolbar,
+    .monitor-page__toolbar,
+    .report-page__workspace,
+    .settings-page__tab-head,
+    .audit-page__toolbar,
+    .score-page__workspace,
+    .fact-page__workspace,
+    .question-page__workspace,
+    .content-page__workspace,
+    .monitor-page__workspace,
+    .settings-page__workspace,
+    .audit-page__workspace
+  )
+  :is(h1, h2, h3, h4) {
+  color: var(--geo-saas-ink);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(.ant-card, .ant-card-body, .ant-table, .ant-table-tbody > tr > td) {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .ant-card,
+    .geo-workspace,
+    .geo-preview,
+    .geo-product-preview,
+    .geo-governance,
+    .geo-workflow-panel,
+    .project-card,
+    .geo-recent-project-card,
+    .geo-budget-card,
+    .role-template-card,
+    .library-card,
+    .geo-question-page__card,
+    .geo-question-page__choice-card,
+    .geo-question-page__goal-card,
+    .project-archive__card,
+    .project-archive__metrics,
+    .project-detail__card,
+    .project-detail__budget-card,
+    .project-archive__progress-card,
+    .project-archive__section-card,
+    .project-archive__more,
+    .agent-run-card,
+    .report-artifact,
+    .risk-card,
+    .reference-panel,
+    .geo-readiness-checklist,
+    .card-container
+  ) {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+html[data-geo-theme].geo-app .geo-shell .ant-card-head,
+html[data-geo-theme].geo-app .geo-shell .card-header {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface-muted);
+  border-bottom-color: var(--geo-saas-border);
+}
+
+/* The title slot and its wrapper must not paint an opaque rectangle over the
+ * shared head surface.  The attribute selectors cover custom GEO card heads
+ * without changing their layout or content structure. */
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .ant-card-head-wrapper,
+    .ant-card-head-title,
+    .ant-card-extra,
+    .ant-card-head-title > *,
+    .ant-card-extra > *,
+    .card-header,
+    .card-header > *,
+    [class*='__card-head'],
+    [class*='-card-head']
+  ) {
+  background: transparent !important;
+}
+
+html[data-geo-theme].geo-app .geo-shell .ant-card-head-title {
+  color: var(--geo-saas-ink);
+}
+
+html[data-geo-theme].geo-app .geo-shell .ant-table-thead > tr > th {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface-muted);
+  border-color: var(--geo-saas-border);
+}
+
+html[data-geo-theme].geo-app .geo-shell .ant-table-tbody > tr:hover > td {
+  background: var(--geo-saas-surface-hover);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-number,
+    .ant-picker,
+    .ant-select-selector,
+    .ant-input-textarea textarea
+  ) {
+  color: var(--geo-saas-ink);
+  background: var(--geo-saas-input-background);
+  border-color: var(--geo-saas-border);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .ant-input::placeholder,
+    .ant-select-selection-placeholder,
+    .ant-picker-input > input::placeholder
+  ) {
+  color: var(--geo-saas-placeholder);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .ant-input:focus,
+    .ant-input-focused,
+    .ant-input-affix-wrapper-focused,
+    .ant-input-number-focused,
+    .ant-picker-focused,
+    .ant-select-focused .ant-select-selector,
+    .ant-input-textarea textarea:focus
+  ) {
+  border-color: var(--geo-saas-brand);
+  box-shadow: 0 0 0 3px var(--geo-saas-focus-ring);
+}
+
+html[data-geo-theme].geo-app .geo-shell .ant-btn-primary {
+  color: var(--geo-saas-brand-foreground);
+  background: var(--geo-saas-brand);
+  border-color: var(--geo-saas-brand);
+  box-shadow: var(--geo-saas-shadow-sm);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-avatar {
+  color: var(--geo-saas-brand-foreground);
+  background: var(--geo-saas-brand);
+  border-color: var(--geo-saas-brand);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .ant-btn-primary:hover,
+    .ant-btn-primary:focus-visible,
+    .ant-btn-primary:active
+  ) {
+  color: var(--geo-saas-brand-foreground);
+  background: var(--geo-saas-brand-hover);
+  border-color: var(--geo-saas-brand-hover);
+}
+
+html[data-geo-theme].geo-app .geo-shell :is(.ant-btn-default, .ant-btn-ghost) {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .ant-btn-default:hover,
+    .ant-btn-default:focus-visible,
+    .ant-btn-ghost:hover
+  ) {
+  color: var(--geo-saas-brand-hover);
+  background: var(--geo-saas-brand-soft);
+  border-color: var(--geo-saas-brand-border);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(.ant-btn-link, .ant-btn-text, .geo-btn-ghost) {
+  color: var(--geo-saas-brand-hover);
+  background: transparent;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(.ant-btn-link:hover, .ant-btn-text:hover, .geo-btn-ghost:hover) {
+  color: var(--geo-saas-brand);
+  background: var(--geo-saas-brand-soft);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .geo-pill-blue,
+    .geo-governance-banner,
+    .geo-todo-action,
+    .geo-project-action
+  ) {
+  color: var(--geo-saas-info);
+  background: var(--geo-saas-info-soft);
+  border-color: var(--geo-saas-info-border);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-pill-green {
+  color: var(--geo-saas-success);
+  background: var(--geo-saas-success-soft);
+  border-color: var(--geo-saas-success-border);
+}
+
+/* Explicitly classed tags can also be rendered by the design-system page or
+ * shared dialogs outside `.geo-shell`. Keep the semantic contract global;
+ * page-specific selectors below only add the same rules with higher priority
+ * for Antdv's themed markup. */
+html[data-geo-theme] .geo-status-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 1px 9px;
+  margin-inline-end: 0;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 20px;
+  color: var(--geo-saas-body);
+  white-space: nowrap;
+  background: var(--geo-saas-surface-muted);
+  border: 1px solid var(--geo-saas-border);
+  border-radius: 999px;
+}
+
+html[data-geo-theme] .geo-status-tag--primary,
+html[data-geo-theme] .geo-status-tag--processing {
+  color: var(--geo-saas-brand);
+  background: var(--geo-saas-brand-soft);
+  border-color: var(--geo-saas-brand-border);
+}
+
+/* C-03：信息态必须用 --status-info-*，不能与主色共用一组值——
+ * 两者在 default 与 warm-editorial 两套调色板里本就是不同的色。 */
+html[data-geo-theme] .geo-status-tag--info {
+  color: var(--status-info-text);
+  background: var(--status-info-bg);
+  border-color: var(--status-info-border);
+}
+
+html[data-geo-theme] .geo-status-tag--success {
+  color: var(--geo-saas-success);
+  background: var(--geo-saas-success-soft);
+  border-color: var(--geo-saas-success-border);
+}
+
+html[data-geo-theme] .geo-status-tag--warning {
+  color: var(--geo-saas-warning);
+  background: var(--geo-saas-warning-soft);
+  border-color: var(--geo-saas-warning-border);
+}
+
+html[data-geo-theme] .geo-status-tag--error {
+  color: var(--status-error-text, var(--geo-saas-danger));
+  background: var(--status-error-bg, var(--geo-saas-danger-soft));
+  border-color: var(--status-error-border, var(--geo-saas-danger-border));
+}
+
+html[data-geo-theme] .geo-status-tag--neutral {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface-muted);
+  border-color: var(--geo-saas-border);
+}
+
+/* Status tags use semantic GEO roles instead of Antdv preset colors. Keep a
+ * neutral default for any legacy tag that has not yet received a tone class;
+ * the high-specificity rule also prevents legacy preset colors from leaking
+ * into a themed page while the page is being migrated. */
+html[data-geo-theme].geo-app .geo-shell .ant-tag,
+html[data-geo-theme].geo-app .geo-shell .geo-status-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 1px 9px;
+  margin-inline-end: 0;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 20px;
+  color: var(--geo-saas-body);
+  white-space: nowrap;
+  background: var(--geo-saas-surface-muted);
+  border: 1px solid var(--geo-saas-border);
+  border-radius: 999px;
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-status-tag--primary,
+html[data-geo-theme].geo-app .geo-shell .geo-status-tag--processing {
+  color: var(--geo-saas-brand);
+  background: var(--geo-saas-brand-soft);
+  border-color: var(--geo-saas-brand-border);
+}
+
+/* C-03：信息态单独用 --status-info-*（与上一块同理）。 */
+html[data-geo-theme].geo-app .geo-shell .geo-status-tag--info {
+  color: var(--status-info-text);
+  background: var(--status-info-bg);
+  border-color: var(--status-info-border);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-status-tag--success {
+  color: var(--geo-saas-success);
+  background: var(--geo-saas-success-soft);
+  border-color: var(--geo-saas-success-border);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-status-tag--warning {
+  color: var(--geo-saas-warning);
+  background: var(--geo-saas-warning-soft);
+  border-color: var(--geo-saas-warning-border);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-status-tag--error {
+  color: var(--status-error-text, var(--geo-saas-danger));
+  background: var(--status-error-bg, var(--geo-saas-danger-soft));
+  border-color: var(--status-error-border, var(--geo-saas-danger-border));
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-status-tag--neutral {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface-muted);
+  border-color: var(--geo-saas-border);
+}
+
+/* Badge status text/dots are the other common source of preset colors.  Keep
+ * them on the same semantic scale as tags so a card never mixes theme colors
+ * with Ant Design's fixed success/error palette. */
+html[data-geo-theme].geo-app .geo-shell .ant-badge-status-text {
+  color: var(--geo-saas-body);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  .ant-badge-status-default
+  .ant-badge-status-dot {
+  background: var(--geo-saas-border);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  .ant-badge-status-processing
+  .ant-badge-status-dot {
+  background: var(--geo-saas-brand);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  .ant-badge-status-success
+  .ant-badge-status-dot {
+  background: var(--geo-saas-success);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  .ant-badge-status-warning
+  .ant-badge-status-dot {
+  background: var(--geo-saas-warning);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  .ant-badge-status-error
+  .ant-badge-status-dot {
+  background: var(--geo-saas-danger);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(.geo-pill-red, .geo-budget-modal-alert.is-danger) {
+  color: var(--geo-saas-danger);
+  background: var(--geo-saas-danger-soft);
+  border-color: var(--geo-saas-danger-border);
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .geo-todo-row.is-warning,
+    .phase-status-active,
+    .geo-budget-modal-alert.is-warning
+  ) {
+  color: var(--geo-saas-warning);
+  background: var(--geo-saas-warning-soft);
+  border-color: var(--geo-saas-warning-border);
+}
+
+html[data-geo-theme] body .geo-marketing-page,
+html[data-geo-theme].geo-login-app .geo-login-page {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-bg);
+}
+
+html[data-geo-theme]
+  body
+  .geo-marketing-page
+  :is(.geo-marketing-hero, .geo-marketing-cta, .geo-login-story) {
+  color: var(--geo-saas-on-strong);
+  background: var(--geo-saas-surface-strong);
+  border-color: var(--geo-saas-border);
+}
+
+html[data-geo-theme]
+  body
+  .geo-marketing-page
+  :is(
+    .geo-marketing-hero h1,
+    .geo-marketing-hero-copy > p,
+    .geo-marketing-cta h2,
+    .geo-marketing-cta p
+  ) {
+  color: var(--geo-saas-on-strong);
+}
+
+html[data-geo-theme]
+  body
+  :is(
+    .geo-marketing-page .geo-marketing-evidence,
+    .geo-marketing-page .geo-marketing-bento-card
+  ),
+html[data-geo-theme].geo-login-app .geo-login-page .geo-login-card {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border);
+  box-shadow: var(--geo-saas-shadow-card);
+}
+
+html[data-geo-theme].geo-login-app
+  .geo-login-page
+  :is(
+    .geo-login-card h1,
+    .geo-login-card h2,
+    .geo-login-card h3,
+    .geo-login-card label
+  ) {
+  color: var(--geo-saas-ink);
+}
+
+html[data-geo-theme] body .geo-access-denied-page {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-bg);
+}
+
+html[data-geo-theme] body .geo-access-denied-card {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border);
+  box-shadow: var(--geo-saas-shadow-card);
+}
+
+html[data-geo-theme] body .geo-access-denied-mark {
+  color: var(--geo-saas-danger);
+  background: var(--geo-saas-danger-soft);
+  border-color: var(--geo-saas-danger-border);
+}
+
+html[data-geo-theme] body .geo-access-denied-card h1 {
+  color: var(--geo-saas-ink);
+}
+
+html[data-geo-theme] body .geo-access-denied-copy {
+  color: var(--geo-saas-body);
+}
+
+html[data-geo-theme] body .geo-access-denied-note {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface-muted);
+  border-color: var(--geo-saas-border);
+}
+
+html[data-geo-theme] body .geo-access-denied-note strong {
+  color: var(--geo-saas-ink);
+}
+
+html[data-geo-theme] body .geo-access-denied-link {
+  color: var(--geo-saas-brand-foreground);
+  background: var(--geo-saas-brand);
+}
+
+html[data-geo-theme] body .geo-access-denied-link:hover {
+  background: var(--geo-saas-brand-hover);
+}
+
+html[data-geo-theme] .geo-appearance-trigger.is-active {
+  color: var(--geo-saas-brand);
+  background: var(--geo-saas-brand-soft);
+  border-color: var(--geo-saas-brand-border);
+}
+
+html[data-geo-theme] .geo-appearance-popover {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border);
+  box-shadow: var(--geo-saas-shadow-card);
+}
+
+html[data-geo-theme]
+  .geo-appearance-popover
+  :is(strong, .geo-appearance-popover__header strong) {
+  color: var(--geo-saas-ink);
+}
+
+html[data-geo-theme]
+  .geo-appearance-popover
+  :is(small, .geo-appearance-popover__hint) {
+  color: var(--geo-saas-muted);
+}
+
+html[data-geo-theme] .geo-appearance-popover__mode.is-selected {
+  color: var(--geo-saas-brand-foreground);
+  background: var(--geo-saas-brand);
+  border-color: var(--geo-saas-brand);
+}
+
+/* Shared GEO page headers: a quiet control-room rail instead of a hero card. */
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .geo-page-header,
+    .project-page__header,
+    .fact-page__header,
+    .question-page__header,
+    .content-page__header,
+    .monitor-page__header,
+    .report-page__header,
+    .settings-page__header,
+    .audit-page__header,
+    .score-page__header,
+    .project-detail__hero
+  ) {
+  color: var(--geo-saas-ink) !important;
+  background: transparent;
+  border-color: var(--geo-saas-border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .geo-page-header h1,
+    .project-page__header h1,
+    .fact-page__header h1,
+    .question-page__header h1,
+    .content-page__header h1,
+    .monitor-page__header h1,
+    .report-page__header h1,
+    .settings-page__header h1,
+    .audit-page__header h1,
+    .score-page__header h1,
+    .project-detail__hero h1
+  ) {
+  color: var(--geo-saas-ink) !important;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .project-page__header p,
+    .fact-page__header p,
+    .question-page__header p,
+    .content-page__header p,
+    .monitor-page__header p,
+    .report-page__header p,
+    .settings-page__header p,
+    .audit-page__header p,
+    .score-page__header p,
+    .project-detail__hero p
+  ) {
+  color: var(--geo-saas-muted) !important;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .project-page__eyebrow,
+    .fact-page__eyebrow,
+    .question-page__eyebrow,
+    .content-page__eyebrow,
+    .monitor-page__eyebrow,
+    .report-page__eyebrow,
+    .settings-page__eyebrow,
+    .audit-page__eyebrow,
+    .score-page__eyebrow
+  ) {
+  color: var(--geo-saas-brand) !important;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .project-page__header-actions,
+    .fact-page__header-actions,
+    .question-page__header-actions,
+    .content-page__header-actions,
+    .monitor-page__header-actions,
+    .settings-page__header-actions,
+    .audit-page__actions,
+    .score-page__header-actions
+  )
+  :is(.ant-btn-default) {
+  color: var(--geo-saas-body);
+  background: transparent;
+  border-color: var(--geo-saas-border);
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  :is(
+    .project-page__header-actions,
+    .fact-page__header-actions,
+    .question-page__header-actions,
+    .content-page__header-actions,
+    .monitor-page__header-actions,
+    .settings-page__header-actions,
+    .audit-page__actions,
+    .score-page__header-actions
+  )
+  :is(.ant-btn-default:hover, .ant-btn-default:focus-visible) {
+  color: var(--geo-saas-brand-hover);
+  background: var(--geo-saas-brand-soft);
+  border-color: var(--geo-saas-brand-border);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-project-context-picker {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  padding: 3px 4px;
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface-muted);
+  border: 1px solid var(--geo-saas-border);
+  border-radius: 14px;
+  box-shadow: none;
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-project-context-picker__label {
+  padding-left: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--geo-saas-muted);
+  white-space: nowrap;
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-project-context-picker__select {
+  flex: 1 1 160px;
+  width: min(180px, 100%);
+  min-width: 0;
+  max-width: 100%;
+  height: 34px;
+  color: var(--geo-saas-body);
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 10px;
+  box-shadow: none !important;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  .geo-project-context-picker__select:hover,
+html[data-geo-theme].geo-app
+  .geo-shell
+  .geo-project-context-picker__select:focus-within {
+  background: var(--geo-saas-surface) !important;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  .geo-project-context-picker__select
+  :is(.ant-select-placeholder, .ant-select-selection-placeholder) {
+  color: var(--geo-saas-muted);
+}
+
+html[data-geo-theme].geo-app .geo-shell .geo-project-context-picker__refresh {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--geo-saas-brand);
+  background: transparent;
+  border-color: transparent;
+  border-radius: 9px;
+  box-shadow: none;
+}
+
+html[data-geo-theme].geo-app
+  .geo-shell
+  .geo-project-context-picker__refresh:hover,
+html[data-geo-theme].geo-app
+  .geo-shell
+  .geo-project-context-picker__refresh:focus-visible {
+  color: var(--geo-saas-brand-hover);
+  background: var(--geo-saas-surface);
+  border-color: transparent;
+}
+
+@media (max-width: 760px) {
+  html[data-geo-theme].geo-app
+    .geo-shell
+    :is(
+      .project-page__header-actions,
+      .fact-page__header-actions,
+      .question-page__header-actions,
+      .content-page__header-actions,
+      .monitor-page__header-actions,
+      .settings-page__header-actions,
+      .audit-page__actions,
+      .score-page__header-actions
+    ) {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  html[data-geo-theme].geo-app
+    .geo-shell
+    :is(
+      .project-page__header-actions,
+      .fact-page__header-actions,
+      .question-page__header-actions,
+      .content-page__header-actions,
+      .monitor-page__header-actions,
+      .settings-page__header-actions,
+      .audit-page__actions,
+      .score-page__header-actions
+    )
+    .geo-project-context-picker {
+    width: 100%;
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Palette refinement
+ *
+ * The default palette is Flagship Sapphire; warm-editorial remains an explicit
+ * alternative. These rules stay structural: content, v-model bindings and
+ * event handlers remain owned by the existing Vue views.
+ * ------------------------------------------------------------------------- */
+
+html[data-geo-theme='default'].geo-app:not(.geo-dark) .geo-shell,
+html[data-geo-theme='warm-editorial'].geo-app .geo-shell {
+  color: var(--text-secondary);
+  background: var(--bg-app);
+}
+
+html[data-geo-theme='default'].geo-app:not(.geo-dark)
+  .geo-shell
+  :is(
+    .geo-flow-page__header h1,
+    .geo-page-header h1,
+    .project-page__header h1,
+    .fact-page__header h1,
+    .question-page__header h1,
+    .content-page__header h1,
+    .monitor-page__header h1,
+    .report-page__header h1,
+    .settings-page__header h1,
+    .audit-page__header h1,
+    .score-page__header h1,
+    .project-detail__hero h1
+  ),
+html[data-geo-theme='warm-editorial'].geo-app
+  .geo-shell
+  :is(
+    .geo-flow-page__header h1,
+    .geo-page-header h1,
+    .project-page__header h1,
+    .fact-page__header h1,
+    .question-page__header h1,
+    .content-page__header h1,
+    .monitor-page__header h1,
+    .report-page__header h1,
+    .settings-page__header h1,
+    .audit-page__header h1,
+    .score-page__header h1,
+    .project-detail__hero h1
+  ) {
+  font-family: var(--geo-saas-display-font-family);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+html[data-geo-theme='default'].geo-app:not(.geo-dark)
+  .geo-shell
+  :is(
+    .ant-btn,
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-number,
+    .ant-picker,
+    .ant-select-selector,
+    .geo-btn-ghost
+  ),
+html[data-geo-theme='warm-editorial'].geo-app
+  .geo-shell
+  :is(
+    .ant-btn,
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-number,
+    .ant-picker,
+    .ant-select-selector,
+    .geo-btn-ghost
+  ) {
+  border-radius: 8px;
+}
+
+html[data-geo-theme='default'].geo-app:not(.geo-dark)
+  .geo-shell
+  :is(
+    .ant-card,
+    .geo-workspace,
+    .project-card,
+    .geo-boundary-card,
+    .geo-empty-card,
+    .geo-preview,
+    .geo-product-preview
+  ),
+html[data-geo-theme='warm-editorial'].geo-app
+  .geo-shell
+  :is(
+    .ant-card,
+    .geo-workspace,
+    .project-card,
+    .geo-boundary-card,
+    .geo-empty-card,
+    .geo-preview,
+    .geo-product-preview
+  ) {
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+html[data-geo-theme='default'].geo-app:not(.geo-dark)
+  .geo-shell
+  :is(.ant-card-head, .ant-table-thead > tr > th),
+html[data-geo-theme='warm-editorial'].geo-app
+  .geo-shell
+  :is(.ant-card-head, .ant-table-thead > tr > th) {
+  background: var(--bg-subtle);
+}
+
+html[data-geo-theme='default'].geo-app:not(.geo-dark)
+  .geo-shell
+  .ant-btn-primary:not(:disabled):not(.ant-btn-disabled),
+html[data-geo-theme='structured-soft'].geo-app
+  .geo-shell
+  .ant-btn-primary:not(:disabled):not(.ant-btn-disabled),
+html[data-geo-theme='nordic'].geo-app
+  .geo-shell
+  .ant-btn-primary:not(:disabled):not(.ant-btn-disabled),
+html[data-geo-theme='warm-editorial'].geo-app
+  .geo-shell
+  .ant-btn-primary:not(:disabled):not(.ant-btn-disabled) {
+  box-shadow: var(--shadow-btn);
+}
+
+/* Flagship Sapphire uses the requested low-noise error surface with a restrained
+ * red rail; other palettes keep their own low-noise error background. */
+html[data-geo-theme='default'].geo-app:not(.geo-dark)
+  .geo-shell
+  .geo-budget-modal-alert.is-danger {
+  background: var(--status-error-bg);
+  border-left: 3px solid var(--status-error-text);
+}

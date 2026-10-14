@@ -1,0 +1,14 @@
+# 锁死换行符为 LF。
+# 没有这一条时，Windows 上检出的文件会把 LF 转成 CRLF，
+# 交付方改动后 diff 会显示"整个文件都变了"，合并时无法定位真实改动。
+* text=auto eol=lf
+
+# 图片等二进制资源不做换行处理
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary

@@ -1,0 +1,11 @@
+/**
+ * 独立开发库的样式入口。
+ *
+ * 顺序不能变：
+ *   1. tailwind-theme.css —— 先建立 Tailwind 的 @layer 与设计令牌
+ *   2. geo-theme.css      —— GEO 语义色板（四套皮肤都靠它换肤）
+ *   3. geo-saas.css       —— 共享 UI 层（本身不含颜色，全取自上一步）
+ */
+@import './tailwind-theme.css';
+@import './geo-theme.css';
+@import './geo-saas.css';

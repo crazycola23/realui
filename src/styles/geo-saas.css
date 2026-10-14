@@ -1,0 +1,1758 @@
+/*
+ * GEO shared UI layer
+ *
+ * This stylesheet is intentionally color-free.  Every visual value comes
+ * from geo-theme.css so the four palettes can skin the same product without
+ * page-level overrides or specificity battles.
+ */
+
+:root {
+  --geo-page-max-width: none;
+  --geo-page-padding: 28px;
+  --geo-page-padding-x: var(--geo-page-padding);
+  --geo-page-section-gap: 24px;
+  --geo-page-action-bar-height: 48px;
+  --geo-workflow-height: 56px;
+
+  /* 路由内容区的保底宽度。视口窄于此值时由 `.geo-content` 出横向滚动条，
+   * 而不是把页面压扁 —— 大屏排版比例必须在小屏上原样保留。
+   * 1160 = 页内最硬的不可压缩需求（article-workspace 右栏 340 固定轨 +
+   * 编辑区 ≥700 + gap 16 + 页内边距 56 ≈ 1112）向上取整；
+   * 对应视口下限 = 本值 + 侧边栏 232。 */
+  --geo-content-min-width: 1160px;
+
+  /* 同类切换控件（标签页 / 分段器）的面板高度基线。没有它，切换后页面总高
+   * 随内容变化，滚动位置与整页布局一起跳。数值与 .geo-table-stage 对齐。 */
+  --geo-tab-panel-min-height: 320px;
+
+  /* ---------------------------------------------------------------------
+   * 排版标度令牌（T1 / 2026-10-03）
+   *
+   * 数值唯一来源是 ui-design-rules-v1.md：字号 T-02（7 档）、间距 S-01（6 档）、
+   * 字重 T-03（2 档）。名字与档位的对应关系如下，改档位只改这里一处。
+   *
+   * 三条边界（X-05~X-07）：
+   *   1. 本文件必须保持 color-free —— 标度令牌只出现长度与数值，不得出现色值；
+   *      颜色一律来自 geo-theme.css 的角色变量。
+   *   2. 只约束「新增与修改的代码」（X-06）。存量 69 个 .vue 里的字面字号/间距
+   *      不在此次迁移范围，改到哪个文件顺手归档即可，禁止一次性全量重构。
+   *   3. 不改动本文件既有的布局令牌（--geo-page-padding 等保持原值）。
+   * ------------------------------------------------------------------- */
+
+  /* 字号：T-02 的 7 档，由小到大 */
+  --geo-text-xs: 12px; /* 辅助信息、说明、徽标 */
+  --geo-text-sm: 13px; /* 正文基准（表格、表单、列表） */
+  --geo-text-base: 14px; /* 强调正文、表格标题行 */
+  --geo-text-md: 16px; /* 区块标题 */
+  --geo-text-lg: 18px; /* 页面标题 */
+  --geo-text-xl: 24px; /* 概览条统计数 */
+  --geo-text-hero: 32px; /* Hero 大数字，每页最多 1 个 */
+
+  /* 间距：S-01 的 6 档（另有一档 32px 仅限页面级大分隔，暂无消费方，不立令牌） */
+  --geo-space-1: 4px;
+  --geo-space-2: 8px;
+  --geo-space-3: 12px;
+  --geo-space-4: 16px;
+  --geo-space-5: 20px;
+  --geo-space-6: 24px;
+
+  /* 字重：T-03 仅两档，禁止 500 / 700 */
+  --geo-weight-normal: 400;
+  --geo-weight-strong: 600;
+}
+
+html.geo-app {
+  scrollbar-gutter: stable;
+}
+
+.geo-shell,
+.geo-shell *,
+.geo-marketing-page,
+.geo-marketing-page * {
+  box-sizing: border-box;
+}
+
+html.geo-app,
+html.geo-app body,
+html.geo-app #app {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  background: var(--geo-saas-bg);
+}
+
+.geo-shell {
+  min-width: 0;
+  min-height: 100%;
+  font-family: var(--geo-saas-font-family);
+  line-height: 1.5;
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-bg);
+}
+
+.geo-content {
+  flex: 1 1 0;
+  width: 100%;
+  min-width: 0;
+  height: 0;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  background: var(--geo-saas-bg);
+}
+
+/* Keep the route frame inside the viewport. Long data remains reachable in
+ * the content region, but the browser never gets a page-level scrollbar. */
+html.geo-app .geo-shell .geo-main {
+  min-height: 0;
+  overflow: hidden;
+}
+
+html.geo-app .geo-shell .geo-content {
+  flex: 1 1 0;
+  height: 0;
+  max-height: 100%;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+html.geo-app .geo-shell .geo-content > * {
+  /* 保底宽落在路由根。路由组件全部是 `.geo-content` 的直接子元素，所以这一条
+   * 覆盖所有页面，不必逐页加；路由骨架屏 `.geo-route-loading` 同样是直接子元素，
+   * 与真实页一起变宽 —— 换页时不会先画出一截窄占位。
+   * 本条特异性 (0,3,1) 已经压过下面共享组的 `min-width: 0` (0,2,0)，
+   * 所以必须写在这里而不是另开一条同名规则（同名拆两处就是
+   * style-duplication-guard 记录过的静默覆盖坑）。
+   * `max-width: 100%` 保持原样：CSS 里 min-width 在 max-width 之后生效，
+   * 两者冲突时 min-width 胜出。 */
+  min-width: var(--geo-content-min-width);
+  max-width: 100%;
+}
+
+html.geo-app .geo-shell .page-shell {
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+}
+
+html.geo-app .geo-shell .page-content {
+  flex: 1 1 0;
+  height: auto;
+  min-height: 0;
+  max-height: 100%;
+}
+
+/* Flex containment contract: route content may reflow inside its own frame,
+ * and wide data still scrolls inside its own table stage — but the route root
+ * itself now carries a floor width (see --geo-content-min-width) so a narrow
+ * viewport scrolls horizontally instead of flattening the desktop proportions.
+ */
+.geo-shell .page-shell,
+.geo-shell .page-content,
+.geo-shell .geo-content > * {
+  min-width: 0;
+}
+
+/* 专注模式（Zen）：由页面自己往 <html> 挂 `geo-focus-mode`，壳层在这里响应。
+ * 沿用登录页已验证的挂类名做法（views/geo/login/index.vue:172 加 / :178 摘），
+ * 而不是让页面去直接改 `.geo-sidebar` —— 侧栏归壳层所有。
+ * 顶栏整块收起是有意取舍：项目上下文与用户菜单在专注态不需要，
+ * 页面自己的返回与保存动作留在 article-workspace 顶条上，不会失去出口。 */
+html.geo-app.geo-focus-mode .geo-shell .geo-sidebar,
+html.geo-app.geo-focus-mode .geo-shell .geo-topbar {
+  display: none;
+}
+
+.geo-shell .page-content {
+  width: 100%;
+  padding: 0;
+}
+
+/* The route shell is the only owner of page width, horizontal padding and
+ * outer rhythm. Business pages and first-level cards fill this frame. */
+.geo-page-content {
+  width: 100%;
+  min-width: 0;
+  padding: 0 !important;
+}
+
+.geo-page-shell {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--geo-page-section-gap);
+  width: 100%;
+  min-width: 0;
+  max-width: var(--geo-page-max-width);
+  min-height: 100%;
+  padding: var(--geo-page-padding) var(--geo-page-padding-x) 28px;
+  margin: 0 auto;
+  color: var(--geo-saas-body);
+  background: transparent;
+}
+
+.geo-page-body {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.geo-page-body > * {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.geo-shell
+  :is(
+    .project-page__header,
+    .fact-page__header,
+    .question-page__header,
+    .content-page__header,
+    .monitor-page__header,
+    .report-page__header,
+    .settings-page__header,
+    .audit-page__header,
+    .score-page__header,
+    .project-detail__hero,
+    .project-page__toolbar,
+    .fact-page__workspace-heading,
+    .question-page__toolbar,
+    .content-page__toolbar,
+    .monitor-page__toolbar,
+    .settings-page__tab-head,
+    .geo-workflow-panel,
+    .geo-workflow-panel__steps,
+    .ant-table-wrapper
+  ) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Shared page rhythm */
+.geo-shell
+  :is(
+    .project-page,
+    .fact-page,
+    .question-page,
+    .content-page,
+    .monitor-page,
+    .report-page,
+    .settings-page,
+    .audit-page,
+    .score-page,
+    .project-detail
+  ) {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  min-height: 0;
+  padding: 0;
+  color: var(--geo-saas-body);
+  background: transparent;
+}
+
+.geo-shell
+  :is(
+    .project-page__eyebrow,
+    .fact-page__eyebrow,
+    .question-page__eyebrow,
+    .content-page__eyebrow,
+    .monitor-page__eyebrow,
+    .report-page__eyebrow,
+    .settings-page__eyebrow,
+    .audit-page__eyebrow,
+    .score-page__eyebrow,
+    .project-detail__eyebrow
+  ) {
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.4;
+  color: var(--geo-saas-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.geo-shell
+  :is(
+    .project-page__toolbar,
+    .fact-page__workspace-heading,
+    .question-page__toolbar,
+    .content-page__toolbar,
+    .monitor-page__toolbar,
+    .audit-page__toolbar,
+    .settings-page__tab-head
+  ) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border: 1px solid var(--geo-saas-border);
+  border-radius: var(--geo-saas-radius-md);
+  box-shadow: var(--geo-saas-shadow-sm);
+}
+
+/* Workflow workspaces keep the current view and its contextual action in one
+ * quiet toolbar.  Filters remain secondary; the single primary button stays
+ * beside the workspace title instead of competing with the page heading. */
+.geo-shell .geo-workspace__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 0 0 12px;
+  margin: 0 0 12px;
+  color: var(--geo-saas-body);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--geo-saas-border-soft);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* The shared shell no longer renders a page title; the top bar breadcrumb and
+ * the active nav item carry that context. Pages that opt into header actions
+ * still render this row, which now only hosts the action buttons. */
+html.geo-app .geo-shell .geo-flow-page__header {
+  box-sizing: border-box;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+  border-bottom: 0;
+}
+
+html.geo-app .geo-shell .geo-flow-page__header::before {
+  display: none;
+}
+
+/* Most pages keep actions below the workflow; detail pages can opt into a
+ * compact header action group without changing the shared shell order. */
+html.geo-app .geo-shell .geo-page-header {
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+html.geo-app .geo-shell .geo-page-shell.has-header-actions .geo-page-header {
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+}
+
+html.geo-app
+  .geo-shell
+  .geo-page-shell.has-header-actions
+  .geo-page-header__actions
+  .ant-btn {
+  height: 36px;
+  padding-inline: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.geo-shell .geo-workspace__toolbar h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--geo-saas-ink);
+  letter-spacing: -0.02em;
+}
+
+.geo-shell .geo-workspace__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.geo-shell
+  :is(
+    .fact-page__workspace,
+    .question-page__workspace,
+    .content-page__workspace,
+    .monitor-page__workspace,
+    .report-page__workspace,
+    .settings-page__workspace,
+    .audit-page__workspace,
+    .score-page__workspace
+  ) {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: 14px 16px 16px;
+  margin: 0;
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border: 1px solid var(--geo-saas-border);
+  border-radius: var(--geo-saas-radius-lg);
+  box-shadow: var(--geo-saas-shadow-card);
+}
+
+.geo-shell :is(.fact-kpis, .question-kpis, .content-kpis, .score-kpis) {
+  gap: 10px;
+  width: 100%;
+  max-width: none;
+  margin: 0 0 14px;
+}
+
+.geo-shell
+  :is(.fact-kpis, .question-kpis, .content-kpis, .score-kpis)
+  .ant-card {
+  min-height: 76px;
+}
+
+/* Cards and data hierarchy */
+.geo-shell
+  :is(
+    .ant-card,
+    .project-card,
+    .geo-kpi,
+    .geo-todo-row,
+    .geo-project-row,
+    .geo-boundary-card,
+    .geo-empty-card,
+    .card-container
+  ) {
+  box-sizing: border-box;
+  overflow: hidden;
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border);
+  border-radius: var(--geo-saas-radius-md);
+  box-shadow: var(--geo-saas-shadow-sm);
+}
+
+.geo-shell :is(.ant-card-head, .ant-card-body) {
+  color: var(--geo-saas-body);
+}
+
+.geo-shell :is(.ant-card-head, .card-header) {
+  min-height: 46px;
+  background: var(--geo-saas-surface-muted);
+  border-bottom-color: var(--geo-saas-border-soft);
+}
+
+.geo-shell .ant-card-body {
+  background: var(--geo-saas-surface);
+}
+
+/* Card title slots inherit the head surface.  Antdv renders the title,
+ * wrapper and extra action as separate nodes; an opaque child background is
+ * what creates the visible white "patch" inside a tinted card header. */
+.geo-shell
+  :is(
+    .ant-card-head-wrapper,
+    .ant-card-head-title,
+    .ant-card-extra,
+    .ant-card-head-title > *,
+    .ant-card-extra > *,
+    .card-header,
+    .card-header > *
+  ) {
+  background: transparent;
+}
+
+.geo-shell :is(.ant-card-head-title, .cell-primary, .cell-content) {
+  color: var(--geo-saas-ink);
+}
+
+.geo-shell .ant-card-head-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.geo-shell :is(.cell-primary, .cell-content) {
+  line-height: 1.5;
+}
+
+.geo-shell .cell-primary {
+  font-weight: 650;
+}
+
+.geo-shell :is(.cell-secondary, .geo-kpi-foot, .geo-project-bottleneck) {
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--geo-saas-muted);
+}
+
+.geo-shell :is(.geo-kpi-label, .geo-todo-label, .geo-section-title > span) {
+  color: var(--geo-saas-muted);
+}
+
+.geo-shell
+  :is(
+    .ant-card:hover,
+    .project-card:hover,
+    .geo-todo-row:hover,
+    .geo-project-row:hover
+  ) {
+  border-color: var(--geo-saas-brand-border);
+  box-shadow: var(--geo-saas-shadow-card);
+  transform: translateY(-1px);
+}
+
+/* Tables */
+
+/* 表格不再自己开一层横向滚动：见下方 .ant-table-container 的说明。
+ * wrapper 上的 overflow-x 是空转的（真正裁切发生在内层 container），
+ * 但一旦把内层放开，wrapper 就变成新的滚动层，它的横向滚动条长在表格底部 ——
+ * 表格一高就落到折叠线以下，用户够不着（实测 y=1464 对 1145 视口）。
+ * 所以三层一起放开，横向缺口交给 .geo-content 那条唯一滚动条承担。 */
+.geo-shell .ant-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow: visible;
+}
+
+/* 原先是 overflow: hidden：没有 scroll.x 的表被它直接裁掉且没有任何滚动出口。
+ * 现在放开后，表格按声明列宽撑开、由页面级滚动条承载；antd 的 fixed 列是
+ * position: sticky，滚动祖先变成 .geo-content 后，右列会精确钉在视口右缘
+ * （实测滚动前后 opRight 恒为 1145 = 232 侧栏 + 913 可视，漂移 0px）。
+ * 带 scroll.y 的表不受影响：那一层是 .ant-table-body，内联 overflow 仍在。 */
+.geo-shell .ant-table-container {
+  overflow: visible;
+  border: 1px solid var(--geo-saas-border);
+  border-radius: var(--geo-saas-radius-md);
+}
+
+/* @v-c/table 在 horizonScroll 为真时往这一层内联写 overflow-x: auto，
+ * 样式表盖不住内联值，必须 !important。只打 .ant-table-content，
+ * 不动 .ant-table-body —— 后者是固定表头表在用的滚动层，得保住内滚。 */
+.geo-shell .ant-table-content {
+  overflow: visible !important;
+}
+
+.geo-shell .ant-table {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--geo-saas-body);
+}
+
+/* 表格与卡片列表是同一层级的两种呈现，共用同一条高度基线：
+ * 在两者之间切换（或与标签面板切换）时页面总高不变，滚动位置不丢。
+ * 数值统一取自 --geo-tab-panel-min-height，避免三处各写一套后互相漂移。 */
+.geo-shell :is(.geo-table-stage, .geo-card-stage) {
+  position: relative;
+  min-width: 0;
+  min-height: var(--geo-tab-panel-min-height);
+}
+
+/* 高度分层（2026-09-22 起）：
+ * stage 自身一律不裁剪 —— 纵向收进视口这件事交给 a-table 的 scroll.y 去做，
+ * 由组件渲染固定表头 + 内部滚动的表体，而不是在 stage 这层再造一个滚动容器。
+ * 原因：@v-c/table 在只给 scroll.x 时会往表体容器上**内联**写 overflow-y: hidden，
+ * 样式表盖不住内联值，CSS 侧改造只能靠 !important 硬压。
+ *
+ * 已锁视口的页面：media、media-manage，统一走 composables/useGeoTableViewportScrollY.ts，
+ * 量不到剩余空间时该 composable 返回 undefined，表格按内容撑高、退回本注释之前的整页滚动。
+ * 其余列表页仍按内容撑高、由 .geo-content 整页滚动，本规则对它们是原语义不变。 */
+.geo-shell .geo-table-stage {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+}
+
+/* 标签面板沿用与表格相同的高度基线：切换标签时页面总高不变，
+ * 否则滚动位置会丢、整页会跳。 */
+.geo-shell .geo-tab-panel {
+  min-height: var(--geo-tab-panel-min-height);
+}
+
+.geo-shell .geo-table-stage > .ant-spin-nested-loading,
+.geo-shell .geo-table-stage > .ant-spin-container {
+  height: 100%;
+  min-height: inherit;
+}
+
+.geo-shell .geo-table-stage > .geo-table-skeleton {
+  height: 100%;
+  min-height: 100%;
+}
+
+.geo-shell .geo-table-stage :is(.ant-empty, .geo-empty-table) {
+  display: grid;
+  place-items: center;
+  min-height: 280px;
+  padding: 36px 18px;
+  margin: 0;
+  background: var(--geo-saas-surface);
+  border: 1px solid var(--geo-saas-border);
+  border-radius: var(--geo-saas-radius-md);
+}
+
+.geo-shell
+  :is(
+    .geo-table-pagination,
+    .fact-page__pagination,
+    .question-page__pagination,
+    .content-page__pagination,
+    .monitor-page__pagination,
+    .audit-page__pagination,
+    .score-page__pagination,
+    .report-page__pagination,
+    .settings-page__pagination,
+    .geo-budget-pagination,
+    .fact-review-pagination
+  ) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 52px;
+  padding-block: 8px;
+  margin-block: 0;
+}
+
+.geo-shell :is(.geo-kpi-value, .fact-kpis strong, .geo-budget-summary__amount) {
+  font-variant-numeric: tabular-nums;
+}
+
+.geo-shell .geo-table-skeleton {
+  contain: layout paint;
+}
+
+.geo-shell .ant-table-thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--geo-saas-body);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  background: var(--geo-saas-surface-muted);
+  border-bottom-color: var(--geo-saas-border);
+}
+
+.geo-shell .ant-table-tbody > tr > td {
+  color: var(--geo-saas-body);
+  border-bottom-color: var(--geo-saas-border-soft);
+}
+
+.geo-shell .ant-table-tbody > tr:last-child > td {
+  border-bottom: 0;
+}
+
+.geo-shell .ant-table-tbody > tr:hover > td {
+  background: var(--geo-saas-surface-hover);
+}
+
+/* Inputs, controls, tabs and feedback */
+.geo-shell .ant-btn {
+  min-height: 34px;
+  font-size: 12px;
+  font-weight: 650;
+  border-radius: var(--geo-saas-radius-sm);
+  box-shadow: none;
+}
+
+/* Keep refresh indicators on a compositor layer while lists update. */
+.geo-shell .ant-btn-loading-icon .anticon-spin,
+.geo-shell .ant-spin-dot-spin {
+  will-change: transform;
+}
+
+/* Ant's loading icon animates width and margin; that forces layout beside a
+ * repainting table. Keep the button transition instant and the ring composited. */
+html.geo-app .geo-shell .ant-btn .ant-btn-loading-icon {
+  transition: none;
+}
+
+.geo-shell .geo-compositor-spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentcolor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: geo-compositor-spin 0.85s linear infinite;
+  will-change: transform;
+}
+
+@keyframes geo-compositor-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Ant skeleton's background-position shimmer repaints during response work. */
+html.geo-app
+  .geo-shell
+  .ant-skeleton.ant-skeleton-active
+  :is(
+    .ant-skeleton-title,
+    .ant-skeleton-paragraph > li,
+    .ant-skeleton-avatar,
+    .ant-skeleton-button,
+    .ant-skeleton-input,
+    .ant-skeleton-node,
+    .ant-skeleton-image
+  ) {
+  background-position: 50% 50%;
+  animation: geo-skeleton-opacity-pulse 1.6s ease-in-out infinite alternate;
+  will-change: opacity;
+}
+
+@keyframes geo-skeleton-opacity-pulse {
+  from {
+    opacity: 0.58;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .geo-shell .geo-compositor-spinner {
+    animation: none;
+    will-change: auto;
+  }
+
+  html.geo-app .geo-shell .ant-skeleton.ant-skeleton-active :is(
+      .ant-skeleton-title,
+      .ant-skeleton-paragraph > li,
+      .ant-skeleton-avatar,
+      .ant-skeleton-button,
+      .ant-skeleton-input,
+      .ant-skeleton-node,
+      .ant-skeleton-image
+    ) {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+.geo-shell .ant-btn-primary {
+  color: var(--geo-saas-brand-foreground);
+  background: var(--geo-saas-brand);
+  border-color: var(--geo-saas-brand);
+  box-shadow: var(--btn-primary-shadow, none);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.geo-shell .ant-btn-primary:hover,
+.geo-shell .ant-btn-primary:focus-visible,
+.geo-shell .ant-btn-primary:active {
+  color: var(--geo-saas-brand-foreground);
+  background: var(--geo-saas-brand-hover);
+  border-color: var(--geo-saas-brand-hover);
+}
+
+.geo-shell :is(.ant-btn-default, .ant-btn-ghost) {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border);
+}
+
+.geo-shell
+  :is(
+    .ant-btn-default:hover,
+    .ant-btn-default:focus-visible,
+    .ant-btn-ghost:hover
+  ) {
+  color: var(--geo-saas-brand-hover);
+  background: var(--geo-saas-brand-soft);
+  border-color: var(--geo-saas-brand-border);
+}
+
+.geo-shell :is(.ant-btn-link, .ant-btn-text, .geo-btn-ghost) {
+  min-height: 28px;
+  padding-inline: 6px;
+  color: var(--geo-saas-brand-hover);
+  background: transparent;
+  border-color: transparent;
+}
+
+.geo-shell :is(.ant-btn-link:hover, .ant-btn-text:hover, .geo-btn-ghost:hover) {
+  color: var(--geo-saas-brand);
+  background: var(--geo-saas-brand-soft);
+}
+
+.geo-shell .ant-btn-dangerous {
+  color: var(--geo-saas-danger);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-danger-border);
+}
+
+.geo-shell
+  :is(
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-number,
+    .ant-picker,
+    .ant-select-selector,
+    .ant-input-textarea textarea
+  ) {
+  color: var(--geo-saas-ink);
+  background: var(--geo-saas-input-background);
+  border-color: var(--geo-saas-border);
+  border-radius: var(--geo-saas-radius-sm);
+  box-shadow: none;
+}
+
+.geo-shell
+  :is(
+    .ant-input::placeholder,
+    .ant-select-selection-placeholder,
+    .ant-picker-input > input::placeholder
+  ) {
+  color: var(--geo-saas-placeholder);
+  opacity: 1;
+}
+
+.geo-shell
+  :is(
+    .ant-input:hover,
+    .ant-input-affix-wrapper:hover,
+    .ant-input-number:hover,
+    .ant-picker:hover,
+    .ant-select:not(.ant-select-disabled):hover .ant-select-selector,
+    .ant-input-textarea textarea:hover
+  ) {
+  border-color: var(--geo-saas-brand-border);
+}
+
+.geo-shell
+  :is(
+    .ant-input:focus,
+    .ant-input-focused,
+    .ant-input-affix-wrapper-focused,
+    .ant-input-number-focused,
+    .ant-picker-focused,
+    .ant-select-focused .ant-select-selector,
+    .ant-input-textarea textarea:focus
+  ) {
+  border-color: var(--geo-saas-brand);
+  box-shadow: 0 0 0 3px var(--geo-saas-focus-ring);
+}
+
+.geo-shell .ant-form-item-label > label {
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--geo-saas-ink);
+}
+
+.geo-shell .ant-form-item-explain-error {
+  font-size: 11px;
+  color: var(--geo-saas-danger);
+}
+
+.geo-shell .ant-tabs-nav {
+  margin-bottom: 12px;
+}
+
+.geo-shell .ant-tabs-tab {
+  color: var(--geo-saas-muted);
+}
+
+.geo-shell .ant-tabs-tab-active .ant-tabs-tab-btn {
+  font-weight: 700;
+  color: var(--geo-saas-brand);
+  background: transparent;
+}
+
+.geo-shell .ant-tabs-ink-bar {
+  height: 2px;
+  background: var(--geo-saas-brand);
+}
+
+.geo-shell .ant-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 1px 9px;
+  margin-inline-end: 0;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface-muted);
+  border: 1px solid var(--geo-saas-border);
+  border-radius: 999px;
+}
+
+.geo-shell .geo-status-tag--primary,
+.geo-shell .geo-status-tag--processing {
+  color: var(--geo-saas-brand);
+  background: var(--geo-saas-brand-soft);
+  border-color: var(--geo-saas-brand-border);
+}
+
+/* C-03：信息态用 --status-info-*，不与主色共用一组值。 */
+.geo-shell .geo-status-tag--info {
+  color: var(--status-info-text);
+  background: var(--status-info-bg);
+  border-color: var(--status-info-border);
+}
+
+.geo-shell .geo-status-tag--success {
+  color: var(--geo-saas-success);
+  background: var(--geo-saas-success-soft);
+  border-color: var(--geo-saas-success-border);
+}
+
+.geo-shell .geo-status-tag--warning {
+  color: var(--geo-saas-warning);
+  background: var(--geo-saas-warning-soft);
+  border-color: var(--geo-saas-warning-border);
+}
+
+.geo-shell .geo-status-tag--error {
+  color: var(--geo-saas-danger);
+  background: var(--geo-saas-danger-soft);
+  border-color: var(--geo-saas-danger-border);
+}
+
+.geo-shell :is(.ant-badge-status-text, .ant-badge-count) {
+  color: var(--geo-saas-body);
+}
+
+.geo-shell .ant-badge-status-processing .ant-badge-status-dot,
+.geo-shell .ant-badge-status-processing::after {
+  background: var(--geo-saas-brand);
+}
+
+.geo-shell .ant-badge-status-success .ant-badge-status-dot {
+  background: var(--geo-saas-success);
+}
+
+.geo-shell .ant-badge-status-warning .ant-badge-status-dot {
+  background: var(--geo-saas-warning);
+}
+
+.geo-shell .ant-badge-status-error .ant-badge-status-dot {
+  background: var(--geo-saas-danger);
+}
+
+.geo-shell .ant-badge-status-default .ant-badge-status-dot {
+  background: var(--geo-saas-muted);
+}
+
+.geo-shell .ant-alert {
+  border-color: var(--geo-saas-border);
+  border-radius: var(--geo-saas-radius-md);
+}
+
+/* Project-scoped pages use one consistent empty-context treatment. Missing a
+ * project is an actionable prerequisite, so it uses the info palette rather
+ * than the warning/error palette used for actual failures. */
+.geo-shell .geo-project-required-alert {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  color: var(--geo-saas-info);
+  background: var(--geo-saas-info-soft);
+  border-color: var(--geo-saas-info-border);
+  border-radius: var(--geo-saas-radius-md);
+}
+
+.geo-shell .geo-project-required-alert .ant-alert-icon {
+  margin-top: 2px;
+  color: var(--geo-saas-info);
+}
+
+.geo-shell .geo-project-required-alert .ant-alert-message {
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.5;
+  color: var(--geo-saas-ink);
+}
+
+.geo-shell .geo-project-required-alert .ant-alert-description {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--geo-saas-body);
+}
+
+.geo-shell .ant-empty {
+  padding: 28px 18px;
+}
+
+.geo-shell .ant-pagination {
+  color: var(--geo-saas-muted);
+}
+
+/* Semantic states and empty/loading/error surfaces */
+.geo-shell
+  :is(
+    .geo-pill-blue,
+    .geo-governance-banner,
+    .geo-todo-action,
+    .geo-project-action
+  ) {
+  color: var(--geo-saas-info);
+  background: var(--geo-saas-info-soft);
+  border-color: var(--geo-saas-info-border);
+}
+
+.geo-shell .geo-pill-green {
+  color: var(--geo-saas-success);
+  background: var(--geo-saas-success-soft);
+  border-color: var(--geo-saas-success-border);
+}
+
+.geo-shell :is(.geo-pill-red, .geo-budget-modal-alert.is-danger) {
+  color: var(--geo-saas-danger);
+  background: var(--geo-saas-danger-soft);
+  border-color: var(--geo-saas-danger-border);
+}
+
+.geo-shell
+  :is(
+    .geo-todo-row.is-warning,
+    .phase-status-active,
+    .geo-budget-modal-alert.is-warning
+  ) {
+  color: var(--geo-saas-warning);
+  background: var(--geo-saas-warning-soft);
+  border-color: var(--geo-saas-warning-border);
+}
+
+/* Portals live under body, so theme them at the document boundary. */
+html[data-geo-theme].geo-app
+  :is(
+    .ant-modal-content,
+    .ant-drawer-content,
+    .ant-popover-inner,
+    .ant-dropdown,
+    .ant-select-dropdown,
+    .ant-tooltip-inner
+  ) {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border);
+}
+
+html[data-geo-theme].geo-app
+  :is(.ant-modal-header, .ant-modal-footer, .ant-drawer-header) {
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border-soft);
+}
+
+html[data-geo-theme].geo-app
+  :is(
+    .ant-modal-title,
+    .ant-drawer-title,
+    .ant-dropdown-menu-item,
+    .ant-select-item-option-content
+  ) {
+  color: var(--geo-saas-ink);
+}
+
+html[data-geo-theme].geo-app
+  :is(.ant-dropdown-menu-item:hover, .ant-select-item-option-active) {
+  color: var(--geo-saas-ink);
+  background: var(--geo-saas-brand-soft);
+}
+
+html[data-geo-theme].geo-app
+  :is(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid var(--geo-saas-focus);
+  outline-offset: 2px;
+}
+
+/* Marketing and public authentication */
+.geo-marketing-page,
+.geo-login-page {
+  min-height: 100vh;
+  font-family: var(--geo-saas-font-family);
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-bg);
+}
+
+.geo-marketing-page {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+
+/* Zero specificity so every button/link class below can still set its own
+ * color; a plain `.geo-marketing-page a` selector would outrank them. */
+:where(.geo-marketing-page a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.geo-marketing-nav,
+.geo-marketing-hero,
+.geo-marketing-trust,
+.geo-marketing-section,
+.geo-marketing-cta,
+.geo-marketing-footer {
+  width: min(1180px, calc(100% - 48px));
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.geo-marketing-nav {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 72px;
+  border-bottom: 1px solid var(--geo-saas-border);
+}
+
+.geo-marketing-brand {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 750;
+  color: var(--geo-saas-ink);
+}
+
+.geo-marketing-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  font-family: var(--geo-saas-font-family);
+  font-size: 18px;
+  color: var(--geo-saas-brand-foreground);
+  background: var(--geo-saas-brand);
+  border-radius: var(--geo-saas-radius-md);
+}
+
+.geo-marketing-nav-links {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--geo-saas-muted);
+}
+
+.geo-marketing-nav-links a:hover {
+  color: var(--geo-saas-brand);
+}
+
+.geo-marketing-nav-actions,
+.geo-marketing-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.geo-marketing-link-button,
+.geo-marketing-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 12px;
+  font-weight: 650;
+  border: 1px solid transparent;
+  border-radius: var(--geo-saas-radius-sm);
+}
+
+.geo-marketing-link-button {
+  color: var(--geo-saas-body);
+  background: var(--geo-saas-surface);
+  border-color: var(--geo-saas-border);
+}
+
+.geo-marketing-link-button:hover {
+  color: var(--geo-saas-brand-hover);
+  border-color: var(--geo-saas-brand-border);
+}
+
+.geo-marketing-primary {
+  color: var(--geo-saas-brand-foreground);
+  background: var(--geo-saas-brand);
+  border-color: var(--geo-saas-brand);
+}
+
+.geo-marketing-primary:hover {
+  background: var(--geo-saas-brand-hover);
+}
+
+.geo-marketing-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--geo-saas-on-strong);
+  background: transparent;
+  border: 1px solid var(--geo-saas-border);
+  border-radius: var(--geo-saas-radius-sm);
+}
+
+.geo-marketing-secondary:hover {
+  color: var(--geo-saas-brand);
+  border-color: var(--geo-saas-brand);
+}
+
+.geo-marketing-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+  gap: 56px;
+  align-items: center;
+  min-height: 540px;
+  padding: 64px;
+  margin-top: 24px;
+  color: var(--geo-saas-on-strong);
+  background: var(--geo-saas-surface-strong);
+  border: 1px solid var(--geo-saas-border);
+  border-radius: var(--geo-saas-radius-lg);
+}
+
+.geo-marketing-hero h1 {
+  max-width: 620px;
+  margin: 18px 0 0;
+  font-size: clamp(42px, 5.2vw, 76px);
+  font-weight: 760;
+  line-height: 1.04;
+  color: var(--geo-saas-on-strong);
+  letter-spacing: -0.07em;
+}
+
+.geo-marketing-hero-eyebrow {
+  color: var(--geo-saas-brand);
+}
+
+.geo-marketing-hero-copy > p {
+  max-width: 500px;
+  margin: 24px 0 0;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--geo-saas-on-strong);
+  opacity: 0.78;
+}
+
+.geo-marketing-eyebrow {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--geo-saas-brand);
+  letter-spacing: 0.14em;
+}
+
+.geo-marketing-eyebrow::before {
+  width: 20px;
+  height: 1px;
+  content: '';
+  background: currentcolor;
+}
+
+.geo-marketing-hero-note,
+.geo-marketing-proof {
+  font-size: 11px;
+  color: var(--geo-saas-muted);
+}
+
+.geo-marketing-proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  padding-top: 18px;
+  margin-top: 30px;
+  border-top: 1px solid var(--geo-saas-border);
+}
+
+.geo-marketing-evidence,
+.geo-evidence-window,
+.geo-marketing-bento-card {
+  background: var(--geo-saas-surface);
+  border: 1px solid var(--geo-saas-border);
+  border-radius: var(--geo-saas-radius-lg);
+  box-shadow: var(--geo-saas-shadow-card);
+}
+
+.geo-marketing-evidence {
+  min-height: 420px;
+  padding: 16px;
+}
+
+.geo-evidence-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 4px 18px;
+}
+
+.geo-evidence-intro span {
+  font-size: 10px;
+  font-weight: 750;
+  color: var(--geo-saas-brand);
+  letter-spacing: 0.12em;
+}
+
+.geo-evidence-intro strong {
+  font-size: 22px;
+  color: var(--geo-saas-ink);
+  letter-spacing: -0.04em;
+}
+
+.geo-evidence-window {
+  overflow: hidden;
+}
+
+.geo-evidence-window-head,
+.geo-evidence-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 17px;
+  border-bottom: 1px solid var(--geo-saas-border-soft);
+}
+
+.geo-evidence-window-head strong,
+.geo-evidence-copy strong {
+  color: var(--geo-saas-ink);
+}
+
+.geo-evidence-window-head span,
+.geo-evidence-status {
+  color: var(--geo-saas-success);
+}
+
+.geo-evidence-window-head span {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.geo-evidence-window-head span i {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: currentcolor;
+  border-radius: 50%;
+}
+
+.geo-evidence-row:last-child {
+  border-bottom: 0;
+}
+
+.geo-evidence-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.geo-evidence-copy strong,
+.geo-evidence-copy span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.geo-evidence-copy span {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--geo-saas-muted);
+}
+
+.geo-evidence-status {
+  padding: 4px 8px;
+  font-size: 10px;
+  white-space: nowrap;
+  background: var(--geo-saas-success-soft);
+  border: 1px solid var(--geo-saas-success-border);
+  border-radius: 999px;
+}
+
+.geo-marketing-section {
+  padding: 72px 0;
+  border-top: 1px solid var(--geo-saas-border);
+}
+
+.geo-marketing-trust {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.75fr) minmax(0, 1.25fr);
+  gap: 48px;
+  padding: 48px 0;
+  border-top: 1px solid var(--geo-saas-border);
+}
+
+.geo-marketing-trust-heading h2 {
+  max-width: 360px;
+  margin: 8px 0 0;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.12;
+  color: var(--geo-saas-ink);
+  letter-spacing: -0.05em;
+}
+
+.geo-marketing-trust-points {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 32px;
+}
+
+.geo-marketing-trust-points article {
+  padding-left: 14px;
+  border-left: 2px solid var(--geo-saas-brand-border);
+}
+
+.geo-marketing-trust-points strong {
+  font-size: 13px;
+  color: var(--geo-saas-ink);
+}
+
+.geo-marketing-trust-points p {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--geo-saas-muted);
+}
+
+.geo-marketing-section-heading h2,
+.geo-marketing-bento-card h3,
+.geo-marketing-step h3,
+.geo-marketing-cta h2 {
+  color: var(--geo-saas-ink);
+}
+
+.geo-marketing-section-heading h2 {
+  max-width: 520px;
+  margin: 8px 0 28px;
+  font-size: clamp(28px, 3.2vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.05em;
+}
+
+.geo-marketing-section-heading p,
+.geo-marketing-bento-card p,
+.geo-marketing-step p,
+.geo-marketing-cta p {
+  line-height: 1.7;
+  color: var(--geo-saas-muted);
+}
+
+.geo-marketing-bento {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.geo-marketing-bento-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+  padding: 22px;
+  box-shadow: var(--geo-saas-shadow-sm);
+}
+
+.geo-marketing-bento-card h3 {
+  margin: 16px 0 8px;
+}
+
+.geo-marketing-bento-card p {
+  max-width: 220px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.geo-marketing-bento-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: var(--geo-saas-brand);
+  background: var(--geo-saas-brand-soft);
+  border-radius: var(--geo-saas-radius-md);
+}
+
+.geo-marketing-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding-top: 22px;
+  border-top: 1px solid var(--geo-saas-border);
+}
+
+.geo-marketing-step {
+  min-height: 170px;
+  padding-right: 18px;
+  border-right: 1px solid var(--geo-saas-border);
+}
+
+.geo-marketing-step h3 {
+  margin: 14px 0 18px;
+}
+
+.geo-marketing-step p {
+  margin: 8px 0 0;
+  font-size: 12px;
+}
+
+.geo-marketing-step p span {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 10px;
+  font-weight: 750;
+  color: var(--geo-saas-brand);
+  letter-spacing: 0.08em;
+}
+
+.geo-marketing-step:last-child {
+  border-right: 0;
+}
+
+.geo-marketing-step-number,
+.geo-marketing-bento-footer {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--geo-saas-brand);
+}
+
+.geo-marketing-cta {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 34px 36px;
+  margin-bottom: 48px;
+  background: var(--geo-saas-surface-muted);
+  border: 1px solid var(--geo-saas-border);
+  border-radius: var(--geo-saas-radius-lg);
+}
+
+.geo-marketing-cta p {
+  margin: 8px 0 0;
+  font-size: 13px;
+}
+
+.geo-marketing-footer {
+  padding-bottom: 28px;
+  font-size: 11px;
+  color: var(--geo-saas-placeholder);
+}
+
+@media (max-width: 860px) {
+  .geo-marketing-hero {
+    grid-template-columns: 1fr;
+    padding: 44px 32px;
+  }
+
+  .geo-marketing-trust {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .geo-marketing-bento,
+  .geo-marketing-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .geo-marketing-nav,
+  .geo-marketing-hero,
+  .geo-marketing-trust,
+  .geo-marketing-section,
+  .geo-marketing-cta,
+  .geo-marketing-footer {
+    width: min(100% - 32px, 1180px);
+  }
+
+  .geo-marketing-nav-links {
+    display: none;
+  }
+
+  .geo-marketing-hero {
+    min-height: auto;
+    padding: 40px 24px 28px;
+  }
+
+  .geo-marketing-bento,
+  .geo-marketing-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .geo-marketing-trust-points {
+    grid-template-columns: 1fr;
+  }
+
+  .geo-marketing-step {
+    min-height: 0;
+    padding: 12px 0 22px;
+    border-right: 0;
+    border-bottom: 1px solid var(--geo-saas-border);
+  }
+
+  .geo-marketing-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 26px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .geo-shell *,
+  .geo-shell *::before,
+  .geo-shell *::after,
+  .geo-marketing-page *,
+  .geo-marketing-page *::before,
+  .geo-marketing-page *::after {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+}
+
+@media (max-width: 760px) {
+  html.geo-app .geo-shell .geo-flow-page__header {
+    gap: 12px;
+    min-height: 0;
+  }
+
+  html.geo-app .geo-shell .geo-workflow-panel {
+    width: 100%;
+    margin-inline: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  html.geo-app .geo-page-shell {
+    padding-inline: 16px;
+  }
+
+  html.geo-app :is(.ant-modal, .ant-drawer-content) {
+    max-width: calc(100vw - 24px);
+  }
+
+  html.geo-app .ant-modal {
+    margin: 12px auto;
+  }
+
+  html.geo-app .ant-modal-content {
+    max-height: calc(100vh - 24px);
+    overflow: hidden;
+  }
+
+  html.geo-app .ant-modal-body {
+    max-height: calc(100vh - 132px);
+    overflow: auto;
+  }
+}
+
+/* Fixed desktop overlay geometry: every GEO dialog shares the same visual
+ * center, regardless of which page opened it. Dialog content scrolls inside
+ * the fixed viewport instead of pushing the dialog upward or downward. */
+html.geo-app :is(.ant-modal-root .ant-modal-wrap, .ant-modal-wrap) {
+  display: flex;
+
+  /* `safe` 关键字不能省：固定宽弹窗（本页有 1120/920/900 若干）窄于视口时，
+   * 普通 center 会把溢出均分到两侧，左半边连同标题一起滚不回来。 */
+  align-items: safe center;
+  justify-content: safe center;
+  padding: 32px 0;
+  overflow: auto;
+}
+
+html.geo-app :is(.ant-modal-root .ant-modal-wrap .ant-modal, .ant-modal) {
+  top: 0 !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+html.geo-app :is(.ant-modal-root .ant-modal, .ant-modal) {
+  /* `.ant-modal-wrap` 是 flex 容器，弹窗作为 flex item 默认 flex-shrink: 1，
+   * 窄视口下会被压到刚好等于视口宽（实测 1120px 的弹窗被压成 594px），
+   * 于是既不保持设计比例、也没有溢出可滚 —— safe center 也就无从生效。
+   * 关掉收缩后它保持声明宽度、溢出交给 wrap 滚动。
+   *
+   * max-width 必须一起放开：antd 自带 `.ant-modal { max-width: calc(100vw - 32px) }`，
+   * 只修 flex-shrink 时它仍然是视口比例上限 —— 实测 1440px 的预览弹窗在 1286px
+   * 视口下被这条压成 1239px。这正是 BR-LAYOUT-002 禁止的形态，所以两条一起解。
+   * 代价：视口窄于设计宽时弹窗要横向滚，不再自动缩 —— 这正是选定的行为。 */
+  flex-shrink: 0;
+  max-width: none;
+  max-height: calc(100vh - 64px);
+}
+
+html.geo-app :is(.ant-modal-root .ant-modal-content, .ant-modal-content) {
+  max-height: calc(100vh - 64px);
+  overflow: hidden;
+}
+
+html.geo-app :is(.ant-modal-root .ant-modal-body, .ant-modal-body) {
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+}
+
+/* Toasts and notifications are feedback, not page content: keep them on a
+ * single visual axis so repeated actions do not appear in unrelated corners. */
+html.geo-app .ant-message {
+  top: 24px !important;
+  left: 50% !important;
+  width: min(520px, calc(100vw - 32px)) !important;
+  transform: translateX(-50%);
+}
+
+html.geo-app .ant-message-notice {
+  width: 100%;
+  margin-inline: auto;
+}
+
+html.geo-app .ant-message-notice-content {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+html.geo-app .ant-notification {
+  inset-inline: 50% auto !important;
+  top: 24px !important;
+  right: auto !important;
+  left: 50% !important;
+  width: min(420px, calc(100vw - 32px));
+  transform: translateX(-50%);
+}
+
+html.geo-app .ant-notification-notice {
+  width: 100%;
+}
+
+html.geo-app .ant-notification-notice-description {
+  overflow-wrap: anywhere;
+}
+
+/* P2 density: publish table row height already handled via .ant-table font-size 13px */
+
+.geo-shell .content-filter-bar {
+  padding: 12px;
+  background: var(--geo-saas-surface-muted);
+  border-radius: 8px;
+}
